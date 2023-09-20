@@ -3,5 +3,4 @@
 int main()
 {
     printf ("go!");
-    return 0;
 }
