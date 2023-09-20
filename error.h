@@ -1,6 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
+#ifndef STL_error_
+#define STL_error_
 
 struct Stack
 {
@@ -14,23 +13,13 @@ int StackErr (const struct Stack* stk);
 
 void StackPrintErr (const int err);
 
-void StackDump (const struct Stack* stk);
+void StackDump (const struct Stack* stk, const char* FILE, const size_t LINE);
 
-int main()
-{
-    struct Stack stk = {.data = 0, .size = 5, .capacity = 8};
-    stk.data = (int*) calloc (stk.capacity, sizeof (int));
-    assert (stk.data);
-
-    StackDump (&stk);
-
-    return 0;
-}
-
-
-void StackDump (const struct Stack* stk)
+void StackDump (const struct Stack* stk, const char* FILE, const size_t LINE)
 {
     printf ("Stack [%p]\n", stk);
+    printf ("\t called from %s %d\n", FILE, LINE);
+
     printf ("{\n");
 
     if (!stk)
@@ -40,21 +29,21 @@ void StackDump (const struct Stack* stk)
 
     printf ("\t size = %u\n",     stk->size);
     printf ("\t capacity = %u\n", stk->capacity);
-    printf ("data = [%p]\n",    stk->data);
-    printf ("{\n");
+    printf ("\t data = [%p]\n",    stk->data);
+    printf ("\t {\n");
 
     size_t i = 0;
     for (; i < stk->size; ++i)
     {
-        printf ("\t *[%u] = %g\n", i, stk->data[i]);
+        printf ("\t\t *[%u] = %g\n", i, stk->data[i]);
     }
     for (; i < stk->capacity; ++i)
     {
-        printf ("\t  [%u] = %g\n", i, stk->data[i]);
+        printf ("\t\t  [%u] = %g\n", i, stk->data[i]);
     }
 
-    printf ("}\n");
-    
+    printf ("\t }\n");
+
     printf ("}\n");
 }
 
@@ -76,3 +65,5 @@ void StackPrintErr (const int err)
     if (err % 4 >= 2) printf ("incorrect size\n");
     if (err % 8 >= 4) printf ("incorrect capacity\n");
 }
+
+#endif
