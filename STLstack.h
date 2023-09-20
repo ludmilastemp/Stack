@@ -1,11 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
+#ifndef STL_stack_
+#define STL_stack_
 
 #include "error.h"
-#include "cdtor.h"
 
-const int DEBAG = 1;
+const int DEBAG = 0;
 #define $ if (DEBAG)
 
 const size_t EXPAND_MULTIPLIER = 2;
@@ -17,34 +15,6 @@ int StackPop  (Stack* stk, int* value);
 int StackReallocUp (Stack* stk);
 
 int StackReallocDown (Stack* stk);
-
-int main()
-{
-    struct Stack stk = {};
-
-    if (StackCtor(&stk)) return 0;
-    //stk.data[stk.size++] = 5;
-    $ printf ("add 5 OK!\n");
-
-    StackDump (&stk, __FILE__, __LINE__);
-
-    if (StackPush (&stk, 7)) return 0;
-    $ printf ("Push OK!\n");
-    if (StackPush (&stk, 9)) return 0;
-    $ printf ("Push OK!\n");
-    if (StackPush (&stk, 3)) return 0;
-    $ printf ("Push OK!\n");
-    
-    int elem = 0;
-    if (StackPop (&stk, *elem)) return 0;
-    $ printf ("Pop  OK! elem = \n");
-
-    StackDump (&stk, __FILE__, __LINE__);
-
-    StackDtor (&stk);
-
-    return 0;
-}
 
 int StackPush (Stack* stk, int value)
 {
@@ -60,9 +30,12 @@ int StackPop (Stack* stk, int* value)
 {
     if (StackErr(stk)) return 1;
 
+    if (stk->size == 0) return 1;
+
     if (StackReallocDown(stk)) return 1;
 
-    *value = stk->data[--(stk->size)];
+    *value = stk->data[stk->size];
+    stk->data[--(stk->size)] = 0;
     return 0;
 }
 
@@ -85,7 +58,7 @@ int StackReallocUp (Stack* stk)
 
 int StackReallocDown (Stack* stk)
 {
-    if (stk->size < stk->capacity / EXPAND_MULTIPLIER) return 0;
+    if (stk->size >= stk->capacity / EXPAND_MULTIPLIER) return 0;
 
     $ printf ("I ReallocDown size = %d  capacity = %d\n",
                         stk->size, stk->capacity);
@@ -99,3 +72,5 @@ int StackReallocDown (Stack* stk)
     if (!(stk->data)) return 1;
     return 0;
 }
+
+#endif

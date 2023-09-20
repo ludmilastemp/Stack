@@ -9,7 +9,7 @@ struct Stack
     int err;
 };
 
-int StackErr (const struct Stack* stk);
+int  StackErr (const struct Stack* stk);
 
 void StackPrintErr (const int err);
 
