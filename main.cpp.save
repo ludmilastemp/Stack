@@ -2,77 +2,35 @@
 #include <stdlib.h>
 #include <assert.h>
 
-struct Stack
-{
-    int* data;
-    size_t size;
-    size_t capacity;
-    int error;
-};
+#include "error.h"
 
-int StackErr (const struct Stack* stk);
-
-void StackPrintErr (const int err);
-
-void StackDump (const struct Stack* stk);
+int StackCtor (Stack* stk, size_t capacity = 8);
 
 int main()
 {
-    struct Stack stk = {.data = 0, .size = 5, .capacity = 8};
-    stk.data = (int*) calloc (stk.capacity, sizeof (int));
-    assert (stk.data);
+    struct Stack stk = {};
 
-    StackDump (&stk);
+    if (!StackCtor(&stk)) return 0;
+    StackDump (&stk, __FILE__, __LINE__);
 
     return 0;
 }
 
-
-void StackDump (const struct Stack* stk)
+int StackCtor (Stack* stk, size_t capacity)
 {
-    printf ("Stack [%p]\n", stk);
-    printf ("{\n");
+    if (!stk) return 0;
 
-    if (!stk)
-    {
-        return;
-    }
+    stk->size = 0;
+    stk->capacity = capacity;
+    stk->data = (int*) calloc (stk->capacity, sizeof (int));
 
-    printf ("\t size = %u\n",     stk->size);
-    printf ("\t capacity = %u\n", stk->capacity);
-    printf ("data = [%p]\n",    stk->data);
-    printf ("{\n");
+    if (!StackErr) return 1;
+}
 
-    size_t i = 0;
-    for (; i < stk->size; ++i)
-    {
-        printf ("\t *[%u] = %g\n", i, stk->data[i]);
-    }
-    for (; i < stk->capacity; ++i)
-    {
-        printf ("\t  [%u] = %g\n", i, stk->data[i]);
-    }
-
-    printf ("}\n");
+int StackDtor (Stack* stk)
+{
     
-    printf ("}\n");
 }
 
-int StackErr (const struct Stack* stk)
-{
-    int err = 0;
-    if (! stk->data) err += 1;
-    if (! stk->size > 0) err += 2;
-    if (! stk->capacity > 0) err += 4;
 
-    StackPrintErr (err);
-
-    return err;
-}
-
-void StackPrintErr (const int err)
-{
-    if (err % 2 >= 1) printf ("incorrect *data\n");
-    if (err % 4 >= 2) printf ("incorrect size\n");
-    if (err % 8 >= 4) printf ("incorrect capacity\n");
-}
+//int Push
