@@ -1,6 +1,10 @@
 #include "error.h"
 
+#ifndef DBG_E // can't find standard headers at standard path?
+
 #include <string.h>
+
+#endif /* DBG_E */
 
 long long CountHash (char* data, long long size)
 {
@@ -18,7 +22,7 @@ long long CountHash (char* data, long long size)
     return hash;
 }
 
-void StackDump (const struct Stack* stk, const char*  CALL_FILE,
+void STL_StackDump (const Stack* stk, const char*  CALL_FILE,
                                          const size_t CALL_LINE,
                                          const char*  CALL_FUNC)
 {
@@ -31,7 +35,7 @@ void StackDump (const struct Stack* stk, const char*  CALL_FILE,
                                            CALL_FUNC);
     printf ("{\n");
 
-    if (!stk)
+    if (!stk) // assert
     {
         return;
     }
@@ -72,7 +76,7 @@ void StackDump (const struct Stack* stk, const char*  CALL_FILE,
     printf ("}\n");
 }
 
-int StackErr (struct Stack* stk, const char*  CALL_FILE,
+int STL_StackErr (struct Stack* stk, const char*  CALL_FILE,
                                  const size_t CALL_LINE,
                                  const char*  CALL_FUNC)
 {
@@ -94,9 +98,6 @@ int StackErr (struct Stack* stk, const char*  CALL_FILE,
     stk->hashData  = CountHash ((char*) stk->data, sizeof (DataType) * stk->capacity);
 
     //if (stk->hashStack != hashStackRef) err += ERR_HASH_STACK;
-    $ printf ("STACK ERR!!!\n");
-    $ printf ("stk->hashStack = %ld\n", stk->hashStack);
-    $ printf ("hashStackRef   = %ld\n", hashStackRef);
     //if (stk->hashData  != hashDataRef)  err += ERR_HASH_DATA;
 
     stk->err = err;
@@ -113,40 +114,28 @@ char* StackPrintErr (const struct Stack* stk, const char*  CALL_FILE,
                                               const char*  CALL_FUNC)
 {
     //*
-    char errStr[200] = "Error from ";    ///////
+    char errStr[500] = "Error from ";    ///////
+    // sprintf
     if (stk->err % (2 * ERR_NOT_DATA)           >= ERR_NOT_DATA)
-        printf ("ERROR! incorrect *data\n");
+        strcat (errStr, "ERROR! incorrect *data\n");
     if (stk->err % (2 * ERR_INCORRECT_SIZE)     >= ERR_INCORRECT_SIZE)
-        printf ("ERROR! incorrect size\n");
+        strcat (errStr, "ERROR! incorrect size\n");
     if (stk->err % (2 * ERR_INCORRECT_CAPACITY) >= ERR_INCORRECT_CAPACITY)
-        printf ("ERROR! incorrect capacity\n");
+        strcat (errStr, "ERROR! incorrect capacity\n");
     if (stk->err % (2 * ERR_LEFT_CANARY)        >= ERR_LEFT_CANARY)
-        printf ("ERROR! incorrect leftCanary\n");
+        strcat (errStr, "ERROR! incorrect leftCanary\n");
     if (stk->err % (2 * ERR_RIGHT_CANARY)       >= ERR_RIGHT_CANARY)
-        printf ("ERROR! incorrect rightCanary\n");
+        strcat (errStr, "ERROR! incorrect rightCanary\n");
     if (stk->err % (2 * ERR_HASH_STACK)         >= ERR_HASH_STACK)
-        printf ("ERROR! incorrect hashStack\n");
+        strcat (errStr, "ERROR! incorrect hashStack\n");
     if (stk->err % (2 * ERR_HASH_DATA)          >= ERR_HASH_DATA)
-        printf ("ERROR! incorrect hashStack\n");
+        strcat (errStr, "ERROR! incorrect hashStack\n");
 
-    if (stk->err % (2 * ERR_NOT_DATA)           >= ERR_NOT_DATA)
-    {
-        strcat (errStr, "\nERROR! incorrect *data = ");
-        //strcat (errStr, %p, stk->data);
-    }
-    if (stk->err % (2 * ERR_INCORRECT_SIZE)     >= ERR_INCORRECT_SIZE)
-    {
-        strcat (errStr,"\nERROR! incorrect size = ");
-        //strcat (errStr,"%u", stk->size);
-    }
-    if (stk->err % (2 * ERR_INCORRECT_CAPACITY) >= ERR_INCORRECT_CAPACITY)
-    {
-        strcat (errStr,"\nERROR! incorrect capacity = ");
-        //strcat (errStr,"%u", stk->capacity);
-    }
-    strcat (errStr, "\n\0");
+    strcat (errStr, "\n");
 
     printf ("%s", errStr);
+
+    StackDump (stk);
 
     return errStr;    // */
 
@@ -166,7 +155,7 @@ char* StackPrintErr (const struct Stack* stk, const char*  CALL_FILE,
         printf ("ERROR! incorrect hashStack = %ld\n", stk->hashStack);
     if (stk->err % (2 * ERR_HASH_DATA)          >= ERR_HASH_DATA)
         printf ("ERROR! incorrect hashStack = %ld\n", stk->hashData);
-    StackDump (stk, CALL_FILE, CALL_LINE, CALL_FUNC);
+    StackDump (stk);
 
     //*/
 }

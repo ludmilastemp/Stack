@@ -1,10 +1,13 @@
 #include "STL_stack.h"
 
-int StackCtor (Stack* stk, size_t capacity)
+int STL_StackCtor (Stack* stk, const char*  CALL_FILE,
+                               const size_t CALL_LINE,
+                               const char*  CALL_FUNC,
+                               size_t capacity)
 {
     if (!stk)
     {
-        return 1;
+        return 1; // WHo?     // assert
     }
 
     stk->size     = 0;
@@ -12,8 +15,8 @@ int StackCtor (Stack* stk, size_t capacity)
     stk->err      = 0;
 
     stk->data     = (DataType*) calloc (stk->capacity * sizeof (DataType) +
-                                        2 * sizeof (CanaryType), sizeof (char));
-
+                                        2 * sizeof (CanaryType), sizeof (char)); // Layout [CA][][]
+    // StackReallocUp()
     if (!stk->data)
     {
         stk->err = ERR_NOT_MEMORY;
@@ -27,27 +30,28 @@ int StackCtor (Stack* stk, size_t capacity)
 
     stk->leftCanary  = (CanaryType) (stk);
     stk->rightCanary = (CanaryType) (stk);
-    stk->rightCanary = stk->leftCanary;
 
     stk->hashStack = CountHash ((char*) stk, sizeof (Stack));
 
     for (size_t i = stk->size; i < stk->capacity; i++)
     {
-        stk->data[i] = INCORRECT_DATA;
+        stk->data[i] = INCORRECT_DATA; // pointer != poison
     }
 
     stk->hashData = CountHash ((char*) stk->data, sizeof (DataType) * stk->capacity);
 
-    return STACK_ERR (stk);
+    return StackErr (stk);
 }
 
-int StackDtor (Stack* stk)
+int STL_StackDtor (Stack* stk, const char*  CALL_FILE,
+                               const size_t CALL_LINE,
+                               const char*  CALL_FUNC)
 {
-    if (STACK_ERR (stk)) return stk->err;
+    if (StackErr (stk)) return stk->err;
 
     stk->size        = INCORRECT_SIZE;
     stk->capacity    = 0;
-    stk->data = (DataType*)((CanaryType*)(stk->data) - 1);
+    stk->data        = (DataType*)((CanaryType*)(stk->data) - 1);
     free(stk->data);
     stk->data        = nullptr;
     stk->err         = 0;
