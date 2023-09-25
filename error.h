@@ -3,10 +3,18 @@
 
 #include "STLstkconst.h"
 
-void StackDump (const struct Stack* stk, const char* CALL_FILE, const size_t CALL_LINE);
+long long CountHash (char* data, long long size);
 
-int  StackErr  (struct Stack* stk, const char* CALL_FILE, const size_t CALL_LINE);
+void StackDump (const struct Stack* stk, const char*  CALL_FILE,
+                                         const size_t CALL_LINE,
+                                         const char*  CALL_FUNC);
 
-void StackPrintErr (const struct Stack* stk, const char* CALL_FILE, const size_t CALL_LINE);
+int  StackErr  (struct Stack* stk, const char*  CALL_FILE,
+                                   const size_t CALL_LINE,
+                                   const char*  CALL_FUNC);
+
+char* StackPrintErr (const struct Stack* stk, const char*  CALL_FILE,
+                                              const size_t CALL_LINE,
+                                              const char*  CALL_FUNC);
 
 #endif
