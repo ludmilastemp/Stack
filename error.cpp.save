@@ -113,27 +113,40 @@ char* StackPrintErr (const struct Stack* stk, const char*  CALL_FILE,
                                               const char*  CALL_FUNC)
 {
     //*
-    char errStr[500] = "Error from ";    ///////
+    char errStr[200] = "Error from ";    ///////
     if (stk->err % (2 * ERR_NOT_DATA)           >= ERR_NOT_DATA)
-        strcat (errStr, "ERROR! incorrect *data\n");
+        printf ("ERROR! incorrect *data\n");
     if (stk->err % (2 * ERR_INCORRECT_SIZE)     >= ERR_INCORRECT_SIZE)
-        strcat (errStr, "ERROR! incorrect size\n");
+        printf ("ERROR! incorrect size\n");
     if (stk->err % (2 * ERR_INCORRECT_CAPACITY) >= ERR_INCORRECT_CAPACITY)
-        strcat (errStr, "ERROR! incorrect capacity\n");
+        printf ("ERROR! incorrect capacity\n");
     if (stk->err % (2 * ERR_LEFT_CANARY)        >= ERR_LEFT_CANARY)
-        strcat (errStr, "ERROR! incorrect leftCanary\n");
+        printf ("ERROR! incorrect leftCanary\n");
     if (stk->err % (2 * ERR_RIGHT_CANARY)       >= ERR_RIGHT_CANARY)
-        strcat (errStr, "ERROR! incorrect rightCanary\n");
+        printf ("ERROR! incorrect rightCanary\n");
     if (stk->err % (2 * ERR_HASH_STACK)         >= ERR_HASH_STACK)
-        strcat (errStr, "ERROR! incorrect hashStack\n");
+        printf ("ERROR! incorrect hashStack\n");
     if (stk->err % (2 * ERR_HASH_DATA)          >= ERR_HASH_DATA)
-        strcat (errStr, "ERROR! incorrect hashStack\n");
+        printf ("ERROR! incorrect hashStack\n");
 
+    if (stk->err % (2 * ERR_NOT_DATA)           >= ERR_NOT_DATA)
+    {
+        strcat (errStr, "\nERROR! incorrect *data = ");
+        //strcat (errStr, %p, stk->data);
+    }
+    if (stk->err % (2 * ERR_INCORRECT_SIZE)     >= ERR_INCORRECT_SIZE)
+    {
+        strcat (errStr,"\nERROR! incorrect size = ");
+        //strcat (errStr,"%u", stk->size);
+    }
+    if (stk->err % (2 * ERR_INCORRECT_CAPACITY) >= ERR_INCORRECT_CAPACITY)
+    {
+        strcat (errStr,"\nERROR! incorrect capacity = ");
+        //strcat (errStr,"%u", stk->capacity);
+    }
     strcat (errStr, "\n\0");
 
     printf ("%s", errStr);
-
-    StackDump (stk, CALL_FILE, CALL_LINE, CALL_FUNC);
 
     return errStr;    // */
 

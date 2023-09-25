@@ -29,6 +29,9 @@ int StackCtor (Stack* stk, size_t capacity)
     stk->rightCanary = (CanaryType) (stk);
     stk->rightCanary = stk->leftCanary;
 
+    printf ("Ctor: %p %p\n", &stk->leftCanary, &stk->rightCanary);
+    printf ("Ctor: %p %p\n", stk->leftCanary, stk->rightCanary);
+
     stk->hashStack = CountHash ((char*) stk, sizeof (Stack));
 
     for (size_t i = stk->size; i < stk->capacity; i++)

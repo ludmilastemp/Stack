@@ -1,9 +1,11 @@
-#include "STLstack.h"
+#include "STL_stack.h"
 
 static int StackReallocUp   (Stack* stk);
 static int StackReallocDown (Stack* stk);
 
-int StackPush (Stack* stk, DataType value)
+int StackPush (Stack* stk, DataType value, const char*  CALL_FILE,
+                                           const size_t CALL_LINE,
+                                           const char*  CALL_FUNC)
 {
     if (STACK_ERR (stk)) return stk->err;
 

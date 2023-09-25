@@ -1,7 +1,7 @@
 #ifndef STL_error_
 #define STL_error_
 
-#include "STLstkconst.h"
+#include "STL_stack.h"
 
 long long CountHash (char* data, long long size);
 

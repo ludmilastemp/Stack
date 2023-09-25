@@ -1,26 +1,8 @@
-#ifndef STL_stkconst_
-#define STL_stkconst_
+#ifndef STL_stack_
+#define STL_stack_
 
-#include <stdio.h>
-#include <stdlib.h>
-
-const int DEBUG = 1;
-#define $ if (DEBUG)
-
-typedef int DataType;
-#define PRINT_DATA "%d"
-
-typedef long long CanaryType;
-#define PRINT_CANARY "%d"
-
-const size_t INITIAL_CAPACITY  = 1;
-const size_t EXPAND_MULTIPLIER = 2;
-
-const size_t INCORRECT_SIZE = -1u;
-const int    INCORRECT_DATA = 666;       //
-
-#define STACK_ERR(stk)  StackErr (stk, __FILE__, __LINE__, __func__)
-#define STACK_DUMP(stk) StackDump (stk, __FILE__, __LINE__, __func__)
+#include "STL_stack_const.h"
+#include "error.h"
 
 struct Stack
 {
@@ -63,5 +45,13 @@ enum StackErr
     ERR_HASH_STACK         = 128,
     ERR_HASH_DATA          = 256,
 };
+
+int StackPush (Stack* stk, DataType  value, const char*  CALL_FILE,
+                                            const size_t CALL_LINE,
+                                            const char*  CALL_FUNC);
+int StackPop  (Stack* stk, DataType* value);
+
+int StackCtor (Stack* stk, size_t capacity = INITIAL_CAPACITY);
+int StackDtor (Stack* stk);
 
 #endif
