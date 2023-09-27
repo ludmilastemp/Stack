@@ -18,11 +18,13 @@ STL_StackPush (Stack* stk, DataType value,
 
     stk->data[stk->size++] = value;
 
+#ifdef HASH_PROTECTION
     stk->hashStack = 0;
     stk->hashData  = 0;
 
     stk->hashStack = CountHash (stk, sizeof (Stack));
     stk->hashData  = CountHash (stk->data, sizeof (DataType) * stk->capacity);
+#endif
 
     return StackErr (stk);
 }
@@ -48,11 +50,13 @@ STL_StackPop (Stack* stk, DataType* value,
     *value = stk->data[--(stk->size)];
     stk->data[stk->size] = INCORRECT_DATA;
 
+#ifdef HASH_PROTECTION
     stk->hashStack = 0;
     stk->hashData  = 0;
 
     stk->hashStack = CountHash (stk, sizeof (Stack));
     stk->hashData  = CountHash (stk->data, sizeof (DataType) * stk->capacity);
+#endif
 
     return StackErr (stk);
 }
@@ -71,15 +75,18 @@ STL_StackCtor (Stack* stk, const char*  CALL_FILE,
 
     StackRealloc (stk);
 
+#ifdef CANARY_PROTECTION
     stk->leftCanary  = (CanaryType) (stk);
     stk->rightCanary = (CanaryType) (stk);
+#endif
 
+#ifdef HASH_PROTECTION
     stk->hashStack = 0;
     stk->hashData  = 0;
 
     stk->hashStack = CountHash ((char*) stk, sizeof (Stack));
     stk->hashData  = CountHash ((char*) stk->data, sizeof (DataType) * stk->capacity);
-
+#endif
 
     return StackErr (stk);
 }
@@ -95,14 +102,24 @@ STL_StackDtor (Stack* stk, const char*  CALL_FILE,
 
     stk->size        = INCORRECT_SIZE;
     stk->capacity    = 0;
+
+#ifdef CANARY_PROTECTION
     stk->data        = (DataType*)((CanaryType*)(stk->data) - 1);
+#endif
+
     free(stk->data);
     stk->data        = nullptr;
     stk->err         = 0;
+
+#ifdef CANARY_PROTECTION
     stk->leftCanary  = 0;
     stk->rightCanary = 0;
+#endif
+
+#ifdef HASH_PROTECTION
     stk->hashStack   = 0;
     stk->hashData    = 0;
+#endif
 
     return 0;
 }
@@ -112,11 +129,16 @@ StackRealloc (Stack* stk)
 {
     assert (stk);
 
+    size_t capacityNew = stk->capacity * sizeof (DataType);
+
+#ifdef CANARY_PROTECTION
+    capacityNew += 2 * sizeof (CanaryType);
     /**
      * [leftCanary][*data][rightCanary]
      */
-    stk->data = (DataType*) realloc (stk->data, stk->capacity * sizeof (DataType) +
-                                    2 * sizeof (CanaryType));
+#endif
+
+    stk->data = (DataType*) realloc (stk->data, capacityNew);
 
     if (!stk->data)
     {
@@ -124,21 +146,27 @@ StackRealloc (Stack* stk)
         return stk->err;
     }
 
+#ifdef CANARY_PROTECTION
     stk->data = (DataType*) ((CanaryType*)stk->data + 1);
+#endif
 
+#ifdef CANARY_PROTECTION
     *((CanaryType*)stk->data - 1)             = (CanaryType) (stk->data);
     *(CanaryType*)(stk->data + stk->capacity) = (CanaryType) (stk->data);
+#endif
 
     for (size_t i = stk->size; i < stk->capacity; i++)
     {
         stk->data[i] = INCORRECT_DATA;
     }
 
+#ifdef HASH_PROTECTION
     stk->hashStack = 0;
     stk->hashData  = 0;
 
     stk->hashStack = CountHash ((char*) stk, sizeof (Stack));
     stk->hashData  = CountHash ((char*) stk->data, sizeof (DataType) * stk->capacity);
+#endif
 
     return stk->err;
 }
@@ -155,7 +183,9 @@ StackReallocUp (Stack* stk)
 
     stk->capacity *= EXPAND_MULTIPLIER;
 
+#ifdef CANARY_PROTECTION
     stk->data = (DataType*) ((char*)stk->data - sizeof (CanaryType));
+#endif
 
     if (StackRealloc (stk)) return stk->err;
 
@@ -178,7 +208,9 @@ StackReallocDown (Stack* stk)
 
     stk->capacity /= EXPAND_MULTIPLIER;
 
+#ifdef CANARY_PROTECTION
     stk->data = (DataType*) ((char*)stk->data - sizeof (CanaryType));
+#endif
 
     if (StackRealloc (stk)) return stk->err;
 

@@ -11,12 +11,17 @@
 
 typedef int ErrorType;
 
-typedef long long CanaryType;
-#define PRINT_CANARY "%d"
+#ifdef CANARY_PROTECTION
+    typedef long long CanaryType;
+    #define PRINT_CANARY "%d"
+#endif
 
 struct Stack
 {
+#ifdef CANARY_PROTECTION
     CanaryType leftCanary;
+#endif
+
     const char*  CREATE_FILE; // const???
     const size_t CREATE_LINE;
     const char*  CREATE_FUNC;
@@ -24,9 +29,15 @@ struct Stack
     size_t size;
     size_t capacity;
     ErrorType err;
+
+#ifdef HASH_PROTECTION
     long long hashStack;
     long long hashData;
+#endif
+
+#ifdef CANARY_PROTECTION
     CanaryType rightCanary;
+#endif
 };
 
 /*  test it    attribute (packed)
@@ -51,10 +62,16 @@ enum StackErr
     ERR_INCORRECT_CAPACITY = 1 << 2,
     ERR_NOT_MEMORY         = 1 << 3,
     ERR_ANTIOVERFLOW       = 1 << 4,
+
+#ifdef CANARY_PROTECTION
     ERR_LEFT_CANARY        = 1 << 5,
     ERR_RIGHT_CANARY       = 1 << 6,
+#endif
+
+#ifdef HASH_PROTECTION
     ERR_HASH_STACK         = 1 << 7,
     ERR_HASH_DATA          = 1 << 8,
+#endif
 };
 
 #define StackErr(stk) STL_StackErr (stk,       \

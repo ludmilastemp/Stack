@@ -8,6 +8,7 @@
 
 static char errStr[500] = "Error from ";
 
+#ifdef HASH_PROTECTION
 long long
 CountHash (void* data, long long size)
 {
@@ -25,6 +26,7 @@ CountHash (void* data, long long size)
 
     return hash;
 }
+#endif
 
 void
 STL_StackDump (const Stack* stk, const char*  CALL_FILE,
@@ -68,10 +70,15 @@ STL_StackDump (const Stack* stk, const char*  CALL_FILE,
 
     printf ("\t }\n");
 
+#ifdef CANARY_PROTECTION
     printf ("\t leftCanary  = [%lld]\n", stk->leftCanary);
     printf ("\t rightCanary = [%lld]\n", stk->rightCanary);
+#endif
+
+#ifdef HASH_PROTECTION
     printf ("\t hashStack = %ld\n",      stk->hashStack);
     printf ("\t hashData  = %ld\n",      stk->hashData);
+#endif
 
     printf ("}\n");
 }
@@ -92,9 +99,13 @@ STL_StackErr (Stack* stk, const char*  CALL_FILE,
         stk->size > stk->capacity)            err += ERR_INCORRECT_SIZE;
     if (stk->capacity == 0 ||
         stk->capacity == INCORRECT_CAPACITY)  err += ERR_INCORRECT_CAPACITY;
+
+#ifdef CANARY_PROTECTION
     if (stk->leftCanary  != (CanaryType) stk) err += ERR_LEFT_CANARY;
     if (stk->rightCanary != (CanaryType) stk) err += ERR_RIGHT_CANARY;
+#endif
 
+#ifdef HASH_PROTECTION
     long long hashStackRef = stk->hashStack;
     long long hashDataRef  = stk->hashData;
 
@@ -107,6 +118,7 @@ STL_StackErr (Stack* stk, const char*  CALL_FILE,
 
     if (stk->hashStack != hashStackRef)       err += ERR_HASH_STACK;
     if (stk->hashData  != hashDataRef)        err += ERR_HASH_DATA;
+#endif
 
     stk->err = err;
 
@@ -160,6 +172,8 @@ StackPrintErr (const Stack* stk, const char*  CALL_FILE,
         sprintf (str, "ERROR! incorrect capacity = %zd\n", stk->capacity);
         strcat (errStr, str);
     }
+
+#ifdef CANARY_PROTECTION
     if (stk->err % (2 * ERR_LEFT_CANARY)        >= ERR_LEFT_CANARY)
     {
         sprintf (str, "ERROR! incorrect leftCanary = %u\n", stk->leftCanary);
@@ -170,6 +184,9 @@ StackPrintErr (const Stack* stk, const char*  CALL_FILE,
         sprintf (str, "ERROR! incorrect rightCanary = %u\n", stk->rightCanary);
         strcat (errStr, str);
     }
+#endif
+
+#ifdef HASH_PROTECTION
     if (stk->err % (2 * ERR_HASH_STACK)         >= ERR_HASH_STACK)
     {
         sprintf (str, "ERROR! incorrect hashStack = %lld\n", stk->hashStack);
@@ -180,6 +197,7 @@ StackPrintErr (const Stack* stk, const char*  CALL_FILE,
         sprintf (str, "ERROR! incorrect hashData  = %lld\n", stk->hashData);
         strcat (errStr, str);
     }
+#endif
 
     StackDump (stk);
 

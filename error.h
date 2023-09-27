@@ -4,8 +4,10 @@
 #include "STL_stack_const.h"
 #include "STL_stack_struct.h"
 
-long long
-CountHash (void* data, long long size);
+#ifdef HASH_PROTECTION
+    long long
+    CountHash (void* data, long long size);
+#endif
 
 void
 STL_StackDump (const Stack* stk, const char*  CALL_FILE,
