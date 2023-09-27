@@ -9,6 +9,7 @@
 
 #endif /* DBG_E */
 
+/// тип кода ошибки
 typedef int ErrorType;
 
 #ifdef CANARY_PROTECTION
@@ -16,6 +17,7 @@ typedef int ErrorType;
     #define PRINT_CANARY "%d"
 #endif
 
+/// структура стека
 struct Stack
 {
 #ifdef CANARY_PROTECTION
@@ -25,6 +27,7 @@ struct Stack
     const char*  CREATE_FILE; // const???
     const size_t CREATE_LINE;
     const char*  CREATE_FUNC;
+    const char*  CREATE_NAME;
     DataType* data;
     size_t size;
     size_t capacity;
@@ -54,6 +57,7 @@ struct
     unsigned int ERR_HASH               : 1;
 } err;      */
 
+/// возможные ошибки при работе с стеком
 enum StackErr
 {
     ERR_NOT_STACK          = 1 << 10,

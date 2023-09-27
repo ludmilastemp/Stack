@@ -47,7 +47,7 @@ STL_StackPop (Stack* stk, DataType* value,
 
     if (StackReallocDown (stk)) return StackErr (stk);
 
-    *value = stk->data[--(stk->size)];
+    *value = stk->data[(stk->size)--];
     stk->data[stk->size] = INCORRECT_DATA;
 
 #ifdef HASH_PROTECTION
@@ -62,13 +62,15 @@ STL_StackPop (Stack* stk, DataType* value,
 }
 
 ErrorType
-STL_StackCtor (Stack* stk, const char*  CALL_FILE,
+STL_StackCtor (Stack* stk, const char*  CREATE_NAME,
+                           const char*  CALL_FILE,
                            const size_t CALL_LINE,
                            const char*  CALL_FUNC,
                            size_t capacity)
 {
     assert (stk);
 
+    stk->CREATE_NAME = CREATE_NAME;
     stk->size     = 0;
     stk->capacity = capacity;
     stk->err      = 0;

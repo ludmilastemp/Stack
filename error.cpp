@@ -33,8 +33,9 @@ STL_StackDump (const Stack* stk, const char*  CALL_FILE,
                                  const size_t CALL_LINE,
                                  const char*  CALL_FUNC)
 {
-    printf ("\nStack [%p]\n", stk);       //
-    printf ("\t stk    from %-3d %s %s\n", stk->CREATE_LINE,
+    printf ("\nStack [%p]\n", stk);
+    printf ("\t %s   from %-3d %s %s\n",   stk->CREATE_NAME,
+                                           stk->CREATE_LINE,
                                            stk->CREATE_FILE,
                                            stk->CREATE_FUNC);
     printf ("\t called from %-3d %s %s\n", CALL_LINE,
@@ -92,17 +93,17 @@ STL_StackErr (Stack* stk, const char*  CALL_FILE,
 
     ErrorType err = 0;
 
-    if (stk->err == ERR_NOT_MEMORY)           err += ERR_NOT_MEMORY;
-    if (stk->err == ERR_ANTIOVERFLOW)         err += ERR_ANTIOVERFLOW;
-    if (!(stk->data))                         err += ERR_NOT_DATA;
+    if (stk->err == ERR_NOT_MEMORY)           err |= ERR_NOT_MEMORY;
+    if (stk->err == ERR_ANTIOVERFLOW)         err |= ERR_ANTIOVERFLOW;
+    if (!(stk->data))                         err |= ERR_NOT_DATA;
     if (stk->size == INCORRECT_SIZE ||
-        stk->size > stk->capacity)            err += ERR_INCORRECT_SIZE;
+        stk->size > stk->capacity)            err |= ERR_INCORRECT_SIZE;
     if (stk->capacity == 0 ||
-        stk->capacity == INCORRECT_CAPACITY)  err += ERR_INCORRECT_CAPACITY;
+        stk->capacity == INCORRECT_CAPACITY)  err |= ERR_INCORRECT_CAPACITY;
 
 #ifdef CANARY_PROTECTION
-    if (stk->leftCanary  != (CanaryType) stk) err += ERR_LEFT_CANARY;
-    if (stk->rightCanary != (CanaryType) stk) err += ERR_RIGHT_CANARY;
+    if (stk->leftCanary  != (CanaryType) stk) err |= ERR_LEFT_CANARY;
+    if (stk->rightCanary != (CanaryType) stk) err |= ERR_RIGHT_CANARY;
 #endif
 
 #ifdef HASH_PROTECTION
@@ -116,8 +117,8 @@ STL_StackErr (Stack* stk, const char*  CALL_FILE,
     stk->hashStack = CountHash (stk, sizeof (Stack));
     stk->hashData  = CountHash (stk->data, sizeof (DataType) * stk->capacity);
 
-    if (stk->hashStack != hashStackRef)       err += ERR_HASH_STACK;
-    if (stk->hashData  != hashDataRef)        err += ERR_HASH_DATA;
+    if (stk->hashStack != hashStackRef)       err |= ERR_HASH_STACK;
+    if (stk->hashData  != hashDataRef)        err |= ERR_HASH_DATA;
 #endif
 
     stk->err = err;

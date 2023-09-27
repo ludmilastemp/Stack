@@ -1,5 +1,7 @@
 #include "STL_stack.h"
                                                       //выравнивание
+
+
 int main()
 {
     struct Stack stk = {
@@ -8,7 +10,9 @@ int main()
 #endif
                          .CREATE_FILE = __FILE__,
                          .CREATE_LINE = __LINE__,
-                         .CREATE_FUNC = __func__ };
+                         .CREATE_FUNC = __func__};
+
+    //FILE* fp = fopen ("log.txt", "r")
 
     StackCtor (&stk);
 
@@ -33,7 +37,7 @@ int main()
     StackPush (&stk, 2);
     $    STACK_DUMP (&stk);
     StackPush (&stk, 3);
-        STACK_DUMP (&stk);
+    $    STACK_DUMP (&stk);
     StackPop (&stk, &elem);
     $    STACK_DUMP (&stk);
     StackPop (&stk, &elem);
@@ -53,9 +57,9 @@ int main()
     $ printf ("Pop  OK! elem = %d \n", elem);
     $ STACK_DUMP (&stk);
 
-    /*
+    //*
     StackPush (&stk, 1);
-        STACK_DUMP (&stk);
+    $    STACK_DUMP (&stk);
 
     StackPop (&stk, &elem);
     StackPop (&stk, &elem);
@@ -65,7 +69,7 @@ int main()
     StackPop (&stk, &elem);
     StackPop (&stk, &elem);
     StackPop (&stk, &elem);
-    StackPop (&stk, &elem);  */
+    StackPop (&stk, &elem);  //*/
 
 
     stk.size = 6;
@@ -75,7 +79,7 @@ int main()
     //$ printf ("Pop  OK! elem = %d \n", elem);
 
     //STACK_ERR  (&stk);  */
-    STACK_DUMP (&stk);
+    $ STACK_DUMP (&stk);
 
     StackDtor (&stk);
 
