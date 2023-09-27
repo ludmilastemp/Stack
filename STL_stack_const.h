@@ -1,41 +1,45 @@
 #ifndef STL_stack_const_
 #define STL_stack_const_
 
-#ifndef DBG_E
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#endif /* DBG_E */
-
-const int DEBUG = 1;
-#define $ if (DEBUG) // $printf()
+const int DEBUG = 0;
+#define $ if (DEBUG)                   // $printf()
 
 #ifndef STACK_T
 #define STACK_T int
 #endif /* STACK_T */
 
+#ifndef PRINT_DATA
+#define PRINT_DATA "%d"
+#endif /* PRINT_DATA */
+
 typedef STACK_T DataType;
 
+#ifndef STACK_INITIAL_CAPACITY
+#define STACK_INITIAL_CAPACITY 1
+#endif /* STACK_INITIAL_CAPACITY */
 
-#define PRINT_DATA "%d"
+#ifndef STACK_EXPAND_MULTIPLIER
+#define STACK_EXPAND_MULTIPLIER 2
+#endif /* STACK_EXPAND_MULTIPLIER */
 
-typedef long long CanaryType;
-#define PRINT_CANARY "%d"
+const unsigned long long INITIAL_CAPACITY  = STACK_INITIAL_CAPACITY;
+const unsigned long long EXPAND_MULTIPLIER = STACK_EXPAND_MULTIPLIER;
 
-const size_t INITIAL_CAPACITY  = 1; // DEFINE_STACK_INITIAL_CAPACITY;
-const size_t EXPAND_MULTIPLIER = 2; // Bit shift << >> :)
+#ifndef STACK_INCORRECT_CAPACITY
+#define STACK_INCORRECT_CAPACITY 0
+#endif /* STACK_INCORRECT_CAPACITY */
 
-const size_t INCORRECT_SIZE = -1u;
-const int    INCORRECT_DATA = 666;
+#ifndef STACK_INCORRECT_SIZE
+#define STACK_INCORRECT_SIZE -1u
+#endif /* STACK_EXPAND_MULTIPLIER */
 
-#define StackErr(stk) STL_StackErr (stk,       \
-                                    CALL_FILE, \
-                                    CALL_LINE, \
-                                    CALL_FUNC)
-#define StackDump(stk) STL_StackDump (stk,     \
-                                    CALL_FILE, \
-                                    CALL_LINE, \
-                                    CALL_FUNC)
+#ifndef STACK_INCORRECT_DATA
+#define STACK_INCORRECT_DATA 666
+#endif /* STACK_INCORRECT_DATA */
+
+const unsigned long long INCORRECT_CAPACITY = STACK_INCORRECT_CAPACITY;
+const unsigned long long INCORRECT_SIZE = STACK_INCORRECT_SIZE;
+const DataType           INCORRECT_DATA = STACK_INCORRECT_DATA;
+
 
 #endif

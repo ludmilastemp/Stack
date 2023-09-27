@@ -1,20 +1,25 @@
 #ifndef STL_error_
 #define STL_error_
 
-#include "STL_stack.h"
+#include "STL_stack_const.h"
+#include "STL_stack_struct.h"
 
-long long CountHash (char* data, long long size);
+long long
+CountHash (void* data, long long size);
 
-void STL_StackDump (const struct Stack* stk, const char*  CALL_FILE,
-                                         const size_t CALL_LINE,
-                                         const char*  CALL_FUNC);
+void
+STL_StackDump (const Stack* stk, const char*  CALL_FILE,
+                                 const size_t CALL_LINE,
+                                 const char*  CALL_FUNC);
 
-int  STL_StackErr  (struct Stack* stk, const char*  CALL_FILE,
-                                   const size_t CALL_LINE,
-                                   const char*  CALL_FUNC);
+ErrorType
+STL_StackErr  (Stack* stk,       const char*  CALL_FILE,
+                                 const size_t CALL_LINE,
+                                 const char*  CALL_FUNC);
 
-char* StackPrintErr (const struct Stack* stk, const char*  CALL_FILE,
-                                              const size_t CALL_LINE,
-                                              const char*  CALL_FUNC);
+char*
+StackPrintErr (const Stack* stk, const char*  CALL_FILE,
+                                 const size_t CALL_LINE,
+                                 const char*  CALL_FUNC);
 
 #endif

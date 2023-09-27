@@ -1,22 +1,29 @@
-#ifndef STL_stack_
-#define STL_stack_
+#ifndef STL_stack_struct_
+#define STL_stack_struct_
 
-#include "STL_stack_const.h"
-#include "STL_stack_.h"
-#include "error.h"
-                /*
+#ifndef DBG_E
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+
+#endif /* DBG_E */
+
+typedef int ErrorType;
+
+typedef long long CanaryType;
+#define PRINT_CANARY "%d"
+
 struct Stack
 {
     CanaryType leftCanary;
-//#if 1001
     const char*  CREATE_FILE; // const???
     const size_t CREATE_LINE;
     const char*  CREATE_FUNC;
-//#endif
     DataType* data;
     size_t size;
     size_t capacity;
-    long long err;
+    ErrorType err;
     long long hashStack;
     long long hashData;
     CanaryType rightCanary;
@@ -34,7 +41,7 @@ struct
     unsigned int ERR_LEFT_CANARY        : 1;
     unsigned int ERR_RIGHT_CANARY       : 1;
     unsigned int ERR_HASH               : 1;
-} err;      /
+} err;      */
 
 enum StackErr
 {
@@ -48,28 +55,15 @@ enum StackErr
     ERR_RIGHT_CANARY       = 1 << 6,
     ERR_HASH_STACK         = 1 << 7,
     ERR_HASH_DATA          = 1 << 8,
-};            */
+};
 
-typedef int StackErr_t;
-
-StackErr_t
-STL_StackPush (Stack* stk, DataType  value,
-                               const char*  CALL_FILE,
-                               const size_t CALL_LINE,
-                               const char*  CALL_FUNC);
-int
-STL_StackPop  (Stack* stk, DataType* value,
-                               const char*  CALL_FILE,
-                               const size_t CALL_LINE,
-                               const char*  CALL_FUNC);
-
-int STL_StackCtor (Stack* stk, const char*  CALL_FILE,
-                               const size_t CALL_LINE,
-                               const char*  CALL_FUNC,
-                   size_t capacity = INITIAL_CAPACITY);
-
-int STL_StackDtor (Stack* stk, const char*  CALL_FILE,
-                               const size_t CALL_LINE,
-                               const char*  CALL_FUNC);
+#define StackErr(stk) STL_StackErr (stk,       \
+                                    CALL_FILE, \
+                                    CALL_LINE, \
+                                    CALL_FUNC)
+#define StackDump(stk) STL_StackDump (stk,     \
+                                    CALL_FILE, \
+                                    CALL_LINE, \
+                                    CALL_FUNC)
 
 #endif
