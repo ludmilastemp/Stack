@@ -60,7 +60,7 @@ struct
 /// возможные ошибки при работе с стеком
 enum StackErr
 {
-    ERR_NOT_STACK          = 1 << 10,
+    ERR_NOT_STACK          = 1 << 18,
     ERR_NOT_DATA           = 1 << 0,    // pointer != poison
     ERR_INCORRECT_SIZE     = 1 << 1,
     ERR_INCORRECT_CAPACITY = 1 << 2,
@@ -72,9 +72,14 @@ enum StackErr
     ERR_RIGHT_CANARY       = 1 << 6,
 #endif
 
+#ifdef CANARY_PROTECTION
+    ERR_LEFT_CANARY_DATA   = 1 << 7,
+    ERR_RIGHT_CANARY_DATA  = 1 << 8,
+#endif
+
 #ifdef HASH_PROTECTION
-    ERR_HASH_STACK         = 1 << 7,
-    ERR_HASH_DATA          = 1 << 8,
+    ERR_HASH_STACK         = 1 << 9,
+    ERR_HASH_DATA          = 1 << 10,
 #endif
 };
 

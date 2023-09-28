@@ -57,7 +57,7 @@ int main()
     $ printf ("Pop  OK! elem = %d \n", elem);
     $ STACK_DUMP (&stk);
 
-    //*
+    /*
     StackPush (&stk, 1);
     $    STACK_DUMP (&stk);
 
