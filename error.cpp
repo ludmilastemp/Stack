@@ -93,9 +93,9 @@ STL_StackDump (const Stack* stk, const char*  CALL_FILE,
 }
 
 ErrorType
-STL_StackErr (Stack* stk, const char*  CALL_FILE,
-                          const size_t CALL_LINE,
-                          const char*  CALL_FUNC)
+STL_Verificator (Stack* stk, const char*  CALL_FILE,
+                             const size_t CALL_LINE,
+                             const char*  CALL_FUNC)
 {
     assert (stk);
 
@@ -115,7 +115,7 @@ STL_StackErr (Stack* stk, const char*  CALL_FILE,
 #endif
 
 #ifdef CANARY_PROTECTION
-    if (*((CanaryType*)stk->data - 1)             != (CanaryType) (stk->data))
+    if (*(CanaryType*)(stk->data + stk->capacity) != (CanaryType) (stk->data))
                                               err |= ERR_LEFT_CANARY_DATA;
     if (*(CanaryType*)(stk->data + stk->capacity) != (CanaryType) (stk->data))
                                               err |= ERR_RIGHT_CANARY_DATA;
@@ -139,8 +139,6 @@ STL_StackErr (Stack* stk, const char*  CALL_FILE,
     stk->err = err;
 
     if (!err) return 0;
-
-    StackPrintErr (stk, CALL_FILE, CALL_LINE, CALL_FUNC);
 
     return err;
 }
@@ -230,8 +228,6 @@ StackPrintErr (const Stack* stk, const char*  CALL_FILE,
         strcat (errStr, str);
     }
 #endif
-
-    StackDump (stk);
 
     fprintf (stderr, "%s", errStr);
 

@@ -12,9 +12,9 @@ STL_StackPush (Stack* stk, DataType value,
 {
     assert (stk);
 
-    if (StackErr (stk)) return stk->err;
+    Verificator (stk);
 
-    if (StackReallocUp (stk)) return StackErr (stk);
+    if (StackReallocUp (stk)) return ReturnVerificator (stk);
 
     stk->data[stk->size++] = value;
 
@@ -26,7 +26,7 @@ STL_StackPush (Stack* stk, DataType value,
     stk->hashData  = CountHash (stk->data, sizeof (DataType) * stk->capacity);
 #endif
 
-    return StackErr (stk);
+    return ReturnVerificator (stk);
 }
 
 ErrorType
@@ -37,15 +37,15 @@ STL_StackPop (Stack* stk, DataType* value,
 {
     assert (stk);
 
-    if (StackErr (stk)) return stk->err;
+    Verificator (stk);
 
     if (stk->size == 0)
     {
         stk->err = ERR_ANTIOVERFLOW;
-        return StackErr (stk);
+        return ReturnVerificator (stk);
     }
 
-    if (StackReallocDown (stk)) return StackErr (stk);
+    if (StackReallocDown (stk)) return ReturnVerificator (stk);
 
     *value = stk->data[(stk->size)--];
     stk->data[stk->size] = INCORRECT_DATA;
@@ -58,7 +58,7 @@ STL_StackPop (Stack* stk, DataType* value,
     stk->hashData  = CountHash (stk->data, sizeof (DataType) * stk->capacity);
 #endif
 
-    return StackErr (stk);
+    return ReturnVerificator (stk);
 }
 
 ErrorType
@@ -90,7 +90,7 @@ STL_StackCtor (Stack* stk, const char*  CREATE_NAME,
     stk->hashData  = CountHash ((char*) stk->data, sizeof (DataType) * stk->capacity);
 #endif
 
-    return StackErr (stk);
+    return ReturnVerificator (stk);
 }
 
 ErrorType
@@ -100,7 +100,7 @@ STL_StackDtor (Stack* stk, const char*  CALL_FILE,
 {
     assert (stk);
 
-    if (StackErr (stk)) return stk->err;
+    Verificator (stk);
 
     stk->size        = INCORRECT_SIZE;
     stk->capacity    = 0;

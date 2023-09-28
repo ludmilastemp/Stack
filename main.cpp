@@ -1,6 +1,4 @@
 #include "STL_stack.h"
-                                                      //выравнивание
-
 
 int main()
 {
@@ -37,6 +35,7 @@ int main()
     StackPush (&stk, 2);
     $    STACK_DUMP (&stk);
     StackPush (&stk, 3);
+    /*
     $    STACK_DUMP (&stk);
     StackPop (&stk, &elem);
     $    STACK_DUMP (&stk);
@@ -72,14 +71,14 @@ int main()
     StackPop (&stk, &elem);  //*/
 
 
-    stk.size = 6;
-    stk.capacity = 0;
+    //stk.size = 6;
+    //stk.capacity = 0;
 
-    //StackPop (&stk, &elem);
+    StackPop (&stk, &elem);
     //$ printf ("Pop  OK! elem = %d \n", elem);
 
     //STACK_ERR  (&stk);  */
-    $ STACK_DUMP (&stk);
+    //STACK_DUMP (&stk);
 
     StackDtor (&stk);
 

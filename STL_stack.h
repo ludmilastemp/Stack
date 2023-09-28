@@ -56,11 +56,27 @@
 #define STACK_DUMP(stk) STL_StackDump ((stk), __FILE__, __LINE__, __func__)
 
 /**
+    \brief проверка стека на корректность и вывод стека в случае ошибки
+    \param stk указатель на стек
+    \return код ошибки
+*/
+#define Verificator(stk)                                       \
+do {                                                           \
+                                                               \
+    if (STL_Verificator ((stk), __FILE__, __LINE__, __func__)) \
+    {                                                          \
+        StackPrintErr (stk, CALL_FILE, CALL_LINE, CALL_FUNC);  \
+        STL_StackDump ((stk), __FILE__, __LINE__, __func__);   \
+        return stk->err;                                       \
+    }                                                          \
+} while (false)
+
+/**
     \brief проверка стека на корректность
     \param stk указатель на стек
     \return код ошибки
 */
-#define STACK_ERR(stk)  STL_StackErr  ((stk), __FILE__, __LINE__, __func__)
+#define ReturnVerificator(stk) STL_Verificator ((stk), __FILE__, __LINE__, __func__)
 
 ErrorType
 STL_StackPush (Stack* stk, DataType  value,

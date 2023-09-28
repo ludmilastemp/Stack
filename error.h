@@ -31,7 +31,7 @@ STL_StackDump (const Stack* stk, const char*  CALL_FILE,
     \return код ошибки
 */
 ErrorType
-STL_StackErr  (Stack* stk,       const char*  CALL_FILE,
+STL_Verificator (Stack* stk,     const char*  CALL_FILE,
                                  const size_t CALL_LINE,
                                  const char*  CALL_FUNC);
 
