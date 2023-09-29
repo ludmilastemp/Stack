@@ -3,7 +3,7 @@
 
 /// режим debug
 const int DEBUG = 0;
-#define $ if (DEBUG)                   // $printf()
+#define $ if (DEBUG)        // $printf()
 
 /// тип значений стека
 #ifndef STACK_T

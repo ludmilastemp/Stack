@@ -5,6 +5,82 @@ static ErrorType StackReallocUp   (Stack* stk);
 static ErrorType StackReallocDown (Stack* stk);
 
 ErrorType
+STL_StackCtor (Stack* stk, const char*  CREATE_NAME,
+                           const char*  CALL_FILE,
+                           const size_t CALL_LINE,
+                           const char*  CALL_FUNC,
+                           size_t capacity)
+{
+    assert (stk);
+
+    stk->CREATE_FILE = CALL_FILE;
+    stk->CREATE_LINE = CALL_LINE;
+    stk->CREATE_FUNC = CALL_FUNC;
+    stk->CREATE_NAME = CREATE_NAME;
+
+    stk->size     = 0;
+    stk->capacity = capacity;
+    stk->err      = 0;
+
+    StackRealloc (stk);
+
+#ifdef CANARY_PROTECTION
+    stk->leftCanary  = (CanaryType) (stk);
+    stk->rightCanary = (CanaryType) (stk);
+#endif
+
+#ifdef HASH_PROTECTION
+    stk->hashStack = 0;
+    stk->hashData  = 0;
+
+    stk->hashStack = CountHash ((char*) stk, sizeof (Stack));
+    stk->hashData  = CountHash ((char*) stk->data, sizeof (DataType) * stk->capacity);
+#endif
+
+    /**
+     * Очистка файла
+     */
+    FILE* fp = fopen (logFile, "w");
+    fclose (fp);
+    fp = nullptr;
+
+    return ReturnVerificator (stk);
+}
+
+ErrorType
+STL_StackDtor (Stack* stk, const char*  CALL_FILE,
+                           const size_t CALL_LINE,
+                           const char*  CALL_FUNC)
+{
+    assert (stk);
+
+    Verificator (stk);
+
+    stk->size        = INCORRECT_SIZE;
+    stk->capacity    = 0;
+
+#ifdef CANARY_PROTECTION
+    stk->data        = (DataType*)((CanaryType*)(stk->data) - 1);
+#endif
+
+    free(stk->data);
+    stk->data        = nullptr;
+    stk->err         = 0;
+
+#ifdef CANARY_PROTECTION
+    stk->leftCanary  = 0;
+    stk->rightCanary = 0;
+#endif
+
+#ifdef HASH_PROTECTION
+    stk->hashStack   = 0;
+    stk->hashData    = 0;
+#endif
+
+    return 0;
+}
+
+ErrorType
 STL_StackPush (Stack* stk, DataType value,
                            const char*  CALL_FILE,
                            const size_t CALL_LINE,
@@ -59,71 +135,6 @@ STL_StackPop (Stack* stk, DataType* value,
 #endif
 
     return ReturnVerificator (stk);
-}
-
-ErrorType
-STL_StackCtor (Stack* stk, const char*  CREATE_NAME,
-                           const char*  CALL_FILE,
-                           const size_t CALL_LINE,
-                           const char*  CALL_FUNC,
-                           size_t capacity)
-{
-    assert (stk);
-
-    stk->CREATE_NAME = CREATE_NAME;
-    stk->size     = 0;
-    stk->capacity = capacity;
-    stk->err      = 0;
-
-    StackRealloc (stk);
-
-#ifdef CANARY_PROTECTION
-    stk->leftCanary  = (CanaryType) (stk);
-    stk->rightCanary = (CanaryType) (stk);
-#endif
-
-#ifdef HASH_PROTECTION
-    stk->hashStack = 0;
-    stk->hashData  = 0;
-
-    stk->hashStack = CountHash ((char*) stk, sizeof (Stack));
-    stk->hashData  = CountHash ((char*) stk->data, sizeof (DataType) * stk->capacity);
-#endif
-
-    return ReturnVerificator (stk);
-}
-
-ErrorType
-STL_StackDtor (Stack* stk, const char*  CALL_FILE,
-                           const size_t CALL_LINE,
-                           const char*  CALL_FUNC)
-{
-    assert (stk);
-
-    Verificator (stk);
-
-    stk->size        = INCORRECT_SIZE;
-    stk->capacity    = 0;
-
-#ifdef CANARY_PROTECTION
-    stk->data        = (DataType*)((CanaryType*)(stk->data) - 1);
-#endif
-
-    free(stk->data);
-    stk->data        = nullptr;
-    stk->err         = 0;
-
-#ifdef CANARY_PROTECTION
-    stk->leftCanary  = 0;
-    stk->rightCanary = 0;
-#endif
-
-#ifdef HASH_PROTECTION
-    stk->hashStack   = 0;
-    stk->hashData    = 0;
-#endif
-
-    return 0;
 }
 
 ErrorType

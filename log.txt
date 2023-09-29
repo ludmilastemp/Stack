@@ -1,0 +1,32 @@
+
+
+Error from 69  .\main.cpp main()
+ERROR! incorrect size = 6
+ERROR! incorrect capacity = 0
+ERROR! incorrect leftCanaryData = [0x00B52DC8]
+ERROR! incorrect rightCanaryData = [0x00000007]
+ERROR! incorrect hashStack = [0x00000015]
+ERROR! incorrect hashData  = [0x00000000]
+
+Stack [0x0064FEB8]
+	 &stk   from 7   .\main.cpp main
+	 called from 69  .\main.cpp main
+{
+	 size = 6
+	 capacity = 0
+	 data = [0x00B52DC8]
+	 {
+		 *[0] = 7
+		 *[1] = 9
+		 *[2] = 3
+		 *[3] = 1
+		 *[4] = 2
+		 *[5] = 3
+	 }
+	 leftCanary  = [0x0064FEB8]
+	 rightCanary = [0x0064FEB8]
+	 hashStack = [0x00000015]
+	 leftCanaryData  = [0x00B52DC8]
+	 rightCanaryData = [0x00000007]
+	 hashData  = [0x00000000]
+}

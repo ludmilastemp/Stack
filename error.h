@@ -16,22 +16,22 @@ CountHash (void* data, long long size);
 #endif
 
 /**
-    \brief вывести стек
-    \param stk указатель на стек
-    \return void
-*/
-void
-STL_StackDump (const Stack* stk, const char*  CALL_FILE,
-                                 const size_t CALL_LINE,
-                                 const char*  CALL_FUNC);
-
-/**
     \brief проверка стека на корректность
     \param stk указатель на стек
     \return код ошибки
 */
 ErrorType
 STL_Verificator (Stack* stk,     const char*  CALL_FILE,
+                                 const size_t CALL_LINE,
+                                 const char*  CALL_FUNC);
+
+/**
+    \brief вывести стек
+    \param stk указатель на стек
+    \return void
+*/
+void
+STL_StackDump (const Stack* stk, const char*  CALL_FILE,
                                  const size_t CALL_LINE,
                                  const char*  CALL_FUNC);
 

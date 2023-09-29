@@ -24,8 +24,8 @@ struct Stack
     CanaryType leftCanary;
 #endif
 
-    const char*  CREATE_FILE; // const???
-    const size_t CREATE_LINE;
+    size_t       CREATE_LINE;
+    const char*  CREATE_FILE;
     const char*  CREATE_FUNC;
     const char*  CREATE_NAME;
     DataType* data;
@@ -43,25 +43,11 @@ struct Stack
 #endif
 };
 
-/*  test it    attribute (packed)
-struct
-{
-    unsigned int ERR_NOT_STACK          : 1;
-    unsigned int ERR_NOT_DATA           : 1;
-    unsigned int ERR_INCORRECT_SIZE     : 1;
-    unsigned int ERR_INCORRECT_CAPACITY : 1;
-    unsigned int ERR_NOT_MEMORY         : 1;
-    unsigned int ERR_ANTIOVERFLOW       : 1;
-    unsigned int ERR_LEFT_CANARY        : 1;
-    unsigned int ERR_RIGHT_CANARY       : 1;
-    unsigned int ERR_HASH               : 1;
-} err;      */
-
 /// возможные ошибки при работе с стеком
 enum StackErr
 {
-    ERR_NOT_STACK          = 1 << 18,
-    ERR_NOT_DATA           = 1 << 0,    // pointer != poison
+    ERR_NOT_STACK_POINTER  = 1 << 18,
+    ERR_NOT_DATA_POINTER   = 1 << 0,
     ERR_INCORRECT_SIZE     = 1 << 1,
     ERR_INCORRECT_CAPACITY = 1 << 2,
     ERR_NOT_MEMORY         = 1 << 3,
