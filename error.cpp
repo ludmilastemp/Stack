@@ -32,9 +32,7 @@ CountHash (void* data, long long size)
 #endif
 
 ErrorType
-STL_Verificator (Stack* stk, const char*  CALL_FILE,
-                             const size_t CALL_LINE,
-                             const char*  CALL_FUNC)
+STL_Verificator (Stack* stk)
 {
     assert (stk);
 
@@ -73,6 +71,9 @@ STL_Verificator (Stack* stk, const char*  CALL_FILE,
 
     if (stk->hashStack != hashStackRef)       err |= ERR_HASH_STACK;
     if (stk->hashData  != hashDataRef)        err |= ERR_HASH_DATA;
+
+    stk->hashStack = hashStackRef;
+    stk->hashData  = hashDataRef;
 #endif
 
     stk->err = err;
@@ -81,25 +82,27 @@ STL_Verificator (Stack* stk, const char*  CALL_FILE,
 }
 
 void
-STL_StackDump (const Stack* stk, const char*  CALL_FILE,
-                                 const size_t CALL_LINE,
-                                 const char*  CALL_FUNC)
+STL_StackDump (const Stack* stk
+
+#ifdef DEBUG
+               , STL_FREC_ARGS
+#endif
+              )
 {
     STL_Print ("\nStack [0x%p]\n", stk);
-    STL_Print ("\t %s   from %-3d %s %s\n",   stk->CREATE_NAME,
-                                           stk->CREATE_LINE,
-                                           stk->CREATE_FILE,
-                                           stk->CREATE_FUNC);
-    STL_Print ("\t called from %-3d %s %s\n", CALL_LINE,
-                                           CALL_FILE,
-                                           CALL_FUNC);
+
+#ifdef DEBUG
+    STL_Print ("\t %s   from %s %-3d %s\n",   STL_DUMP_ARGS);
+    STL_Print ("\t called from %s %-3d %s\n", STL_FSENT_ARGS);
+#endif
+
     STL_Print ("{\n");
 
     assert (stk);
 
     STL_Print ("\t size = %zd\n",     stk->size);
     STL_Print ("\t capacity = %zd\n", stk->capacity);
-    STL_Print ("\t data = [0x%p]\n",    stk->data);
+    STL_Print ("\t data = [0x%p]\n",  stk->data);
     STL_Print ("\t {\n");
 
     if (stk->data)
@@ -110,26 +113,26 @@ STL_StackDump (const Stack* stk, const char*  CALL_FILE,
             if (stk->data[i] == INCORRECT_DATA)
                 STL_Print ("\t\t *[%zd] = POISON\n", i);
             else
-                STL_Print ("\t\t *[%zd] = " PRINT_DATA "\n", i, stk->data[i]);
+                STL_Print ("\t\t *[%zd] = " STACK_DATA_PRINT_SPECIFIER "\n", i, stk->data[i]);
         }
         for (; i < stk->capacity; ++i)
         {
             if (stk->data[i] == INCORRECT_DATA)
                 STL_Print ("\t\t  [%zd] = POISON\n", i);
             else
-                STL_Print ("\t\t  [%zd] = " PRINT_DATA "\n", i, stk->data[i]);
+                STL_Print ("\t\t  [%zd] = " STACK_DATA_PRINT_SPECIFIER "\n", i, stk->data[i]);
         }
     }
 
     STL_Print ("\t }\n");
 
 #ifdef CANARY_PROTECTION
-    STL_Print ("\t leftCanary  = [0x%p]\n", stk->leftCanary);
-    STL_Print ("\t rightCanary = [0x%p]\n", stk->rightCanary);
+    STL_Print ("\t leftCanary      = [0x%p]\n", stk->leftCanary);
+    STL_Print ("\t rightCanary     = [0x%p]\n", stk->rightCanary);
 #endif
 
 #ifdef HASH_PROTECTION
-    STL_Print ("\t hashStack = [0x%p]\n",      stk->hashStack);
+    STL_Print ("\t hashStack       = [0x%p]\n", stk->hashStack);
 #endif
 
 #ifdef CANARY_PROTECTION
@@ -138,20 +141,29 @@ STL_StackDump (const Stack* stk, const char*  CALL_FILE,
 #endif
 
 #ifdef HASH_PROTECTION
-    STL_Print ("\t hashData  = [0x%p]\n",      stk->hashData);
+    STL_Print ("\t hashData        = [0x%p]\n", stk->hashData);
 #endif
 
     STL_Print ("}\n");
 }
 
 char*
-StackPrintErr (const Stack* stk, const char*  CALL_FILE,
-                                 const size_t CALL_LINE,
-                                 const char*  CALL_FUNC)
+StackPrintErr (const Stack* stk
+
+#ifdef DEBUG
+               , STL_FREC_ARGS
+#endif
+               )
 {
     char str[100] = " ";
 
-    sprintf (errStr, "\n\nError from %-3d %s %s()\n", CALL_LINE, CALL_FILE, CALL_FUNC);
+    sprintf (errStr, "\n\n"
+
+#ifdef DEBUG
+             "Error from %s %-3d %s()\n", STL_FSENT_ARGS
+#endif
+            );
+
     if (stk->err % (2 * ERR_NOT_DATA_POINTER)   >= ERR_NOT_DATA_POINTER)
     {
         sprintf (str, "ERROR! incorrect *data = %p\n", stk->data);

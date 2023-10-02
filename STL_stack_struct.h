@@ -14,20 +14,24 @@ typedef int ErrorType;
 
 #ifdef CANARY_PROTECTION
     typedef long long CanaryType;
-    #define PRINT_CANARY "%d"
+    #define CANARY_PRINT_SPECIFIER "%d"
 #endif
 
 /// структура стека
+//struct Stack##STACK_T <-define
 struct Stack
 {
 #ifdef CANARY_PROTECTION
     CanaryType leftCanary;
 #endif
 
+#ifdef DEBUG
     size_t       CREATE_LINE;
     const char*  CREATE_FILE;
     const char*  CREATE_FUNC;
     const char*  CREATE_NAME;
+#endif
+
     DataType* data;
     size_t size;
     size_t capacity;
@@ -68,14 +72,5 @@ enum StackErr
     ERR_HASH_DATA          = 1 << 10,
 #endif
 };
-
-#define StackErr(stk) STL_StackErr (stk,       \
-                                    CALL_FILE, \
-                                    CALL_LINE, \
-                                    CALL_FUNC)
-#define StackDump(stk) STL_StackDump (stk,     \
-                                    CALL_FILE, \
-                                    CALL_LINE, \
-                                    CALL_FUNC)
 
 #endif

@@ -4,6 +4,26 @@
 #include "STL_stack_const.h"
 #include "STL_stack_struct.h"
 
+#ifdef DEBUG
+/// аргументы, принимаемые функциями
+#define STL_FREC_ARGS  const char*  CALL_FILE, \
+                       const size_t CALL_LINE, \
+                       const char*  CALL_FUNC
+
+
+/// аргументы, при вызове функций из функции библиотеки
+#define STL_FSENT_ARGS CALL_FILE, \
+                       CALL_LINE, \
+                       CALL_FUNC
+
+
+/// аргументы, при вызове функций из функции библиотеки
+#define STL_DUMP_ARGS stk->CREATE_NAME, \
+                      stk->CREATE_FILE, \
+                      stk->CREATE_LINE, \
+                      stk->CREATE_FUNC
+#endif /* DEBUG */
+
 #ifdef HASH_PROTECTION
 /**
     \brief посчитать хеш
@@ -21,9 +41,7 @@ CountHash (void* data, long long size);
     \return код ошибки
 */
 ErrorType
-STL_Verificator (Stack* stk,     const char*  CALL_FILE,
-                                 const size_t CALL_LINE,
-                                 const char*  CALL_FUNC);
+STL_Verificator (Stack* stk);
 
 /**
     \brief вывести стек
@@ -31,9 +49,12 @@ STL_Verificator (Stack* stk,     const char*  CALL_FILE,
     \return void
 */
 void
-STL_StackDump (const Stack* stk, const char*  CALL_FILE,
-                                 const size_t CALL_LINE,
-                                 const char*  CALL_FUNC);
+STL_StackDump (const Stack* stk
+
+#ifdef DEBUG
+               , STL_FREC_ARGS
+#endif
+               );
 
 /**
     \brief расшифровка ошибок корректности стека
@@ -41,8 +62,11 @@ STL_StackDump (const Stack* stk, const char*  CALL_FILE,
     \return указатель на строку
 */
 char*
-StackPrintErr (const Stack* stk, const char*  CALL_FILE,
-                                 const size_t CALL_LINE,
-                                 const char*  CALL_FUNC);
+StackPrintErr (const Stack* stk
 
+#ifdef DEBUG
+               , STL_FREC_ARGS
 #endif
+               );
+
+#endif /* STL_error_ */

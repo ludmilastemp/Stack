@@ -1,9 +1,17 @@
 #ifndef STL_stack_const_
 #define STL_stack_const_
 
+#define TOSTR(x) #x
+
 /// режим debug
-const int DEBUG = 0;
-#define $ if (DEBUG)        // $printf()
+#ifdef DEBUG_PRINT
+    const int DBG = 1;
+#else
+    const int DEBUG_PRINT = 0;
+#endif /* DEBUG_PRINT */
+
+/// debug выводы
+#define $ if (DEBUG_PRINT)
 
 /// тип значений стека
 #ifndef STACK_T
@@ -13,9 +21,9 @@ const int DEBUG = 0;
 typedef STACK_T DataType;
 
 /// спецификатор формата типа стека
-#ifndef PRINT_DATA
-#define PRINT_DATA "%d"
-#endif /* PRINT_DATA */
+#ifndef STACK_DATA_PRINT_SPECIFIER
+#define STACK_DATA_PRINT_SPECIFIER TOSTR(%d)
+#endif /* STACK_DATA_PRINT_SPECIFIER */
 
 /// размер стека при создании
 #ifndef STACK_INITIAL_CAPACITY
@@ -33,7 +41,7 @@ const unsigned long long EXPAND_MULTIPLIER = STACK_EXPAND_MULTIPLIER;
 
 /// неккоректный размер стека
 #ifndef STACK_INCORRECT_CAPACITY
-#define STACK_INCORRECT_CAPACITY 0
+#define STACK_INCORRECT_CAPACITY -1u
 #endif /* STACK_INCORRECT_CAPACITY */
 
 const unsigned long long INCORRECT_CAPACITY = STACK_INCORRECT_CAPACITY;
@@ -53,6 +61,10 @@ const unsigned long long INCORRECT_SIZE = STACK_INCORRECT_SIZE;
 const DataType           INCORRECT_DATA = STACK_INCORRECT_DATA;
 
 /// файл вывода ошибок
-const char logFile[] = "log.txt";
+#ifndef LOGFILE
+#define LOGFILE log.txt
+#endif /* LOGFILE */
+
+const char logFile[] = TOSTR(LOGFILE);
 
 #endif

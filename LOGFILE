@@ -1,0 +1,58 @@
+
+
+ERROR! incorrect size = 6
+ERROR! incorrect capacity = 0
+ERROR! incorrect leftCanaryData = [0x00AE2D68]
+ERROR! incorrect rightCanaryData = [0x00000007]
+ERROR! incorrect hashStack = [0x0000009B]
+ERROR! incorrect hashData  = [0x00000010]
+
+Stack [0x0064FEC8]
+{
+	 size = 6
+	 capacity = 0
+	 data = [0x00AE2D68]
+	 {
+		 *[0] = 7
+		 *[1] = 9
+		 *[2] = 11414888
+		 *[3] = 0
+		 *[4] = 1941496911
+		 *[5] = 134280812
+	 }
+	 leftCanary      = [0x0064FEC8]
+	 rightCanary     = [0x0064FEC8]
+	 hashStack       = [0x0000009B]
+	 leftCanaryData  = [0x00AE2D68]
+	 rightCanaryData = [0x00000007]
+	 hashData        = [0x00000010]
+}
+
+
+ERROR! incorrect size = 6
+ERROR! incorrect capacity = 0
+ERROR! incorrect leftCanaryData = [0x00AE2D68]
+ERROR! incorrect rightCanaryData = [0x00000007]
+ERROR! incorrect hashStack = [0x0000009B]
+ERROR! incorrect hashData  = [0x00000010]
+
+Stack [0x0064FEC8]
+{
+	 size = 6
+	 capacity = 0
+	 data = [0x00AE2D68]
+	 {
+		 *[0] = 7
+		 *[1] = 9
+		 *[2] = 11414888
+		 *[3] = 0
+		 *[4] = 1941496911
+		 *[5] = 134280812
+	 }
+	 leftCanary      = [0x0064FEC8]
+	 rightCanary     = [0x0064FEC8]
+	 hashStack       = [0x0000009B]
+	 leftCanaryData  = [0x00AE2D68]
+	 rightCanaryData = [0x00000007]
+	 hashData        = [0x00000010]
+}

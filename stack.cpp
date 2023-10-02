@@ -4,22 +4,58 @@ static ErrorType StackRealloc     (Stack* stk);
 static ErrorType StackReallocUp   (Stack* stk);
 static ErrorType StackReallocDown (Stack* stk);
 
+/**
+    \brief проверяет стек на корректность и выводит стек в случае ошибки
+    \param stk указатель на стек
+    \return код ошибки
+*/
+
+#ifdef DEBUG
+    #define Verificator(stk)                                        \
+    do {                                                            \
+                                                                    \
+        if (STL_Verificator ((stk)))                                \
+        {                                                           \
+                                                                    \
+            StackPrintErr (stk, STL_FSENT_ARGS);                    \
+            STL_StackDump ((stk), STL_FSENT_ARGS);                  \
+            return stk->err;                                        \
+        }                                                           \
+    } while (false)
+#else
+    #define Verificator(stk)                                        \
+    do {                                                            \
+                                                                    \
+        if (STL_Verificator ((stk)))                                \
+        {                                                           \
+            StackPrintErr (stk);                                    \
+            STL_StackDump ((stk));                                  \
+            return stk->err;                                        \
+        }                                                           \
+    } while (false)
+#endif
+
 ErrorType
-STL_StackCtor (Stack* stk, const char*  CREATE_NAME,
-                           const char*  CALL_FILE,
-                           const size_t CALL_LINE,
-                           const char*  CALL_FUNC,
-                           size_t capacity)
+STL_StackCtor (Stack* stk
+
+#ifdef DEBUG
+               , const char* CREATE_NAME
+               , STL_FREC_ARGS
+#endif
+               , size_t capacity)
 {
     assert (stk);
 
+#ifdef DEBUG
     stk->CREATE_FILE = CALL_FILE;
     stk->CREATE_LINE = CALL_LINE;
     stk->CREATE_FUNC = CALL_FUNC;
     stk->CREATE_NAME = CREATE_NAME;
+#endif
 
     stk->size     = 0;
     stk->capacity = capacity;
+
     stk->err      = 0;
 
     StackRealloc (stk);
@@ -48,9 +84,12 @@ STL_StackCtor (Stack* stk, const char*  CREATE_NAME,
 }
 
 ErrorType
-STL_StackDtor (Stack* stk, const char*  CALL_FILE,
-                           const size_t CALL_LINE,
-                           const char*  CALL_FUNC)
+STL_StackDtor (Stack* stk
+
+#ifdef DEBUG
+              , STL_FREC_ARGS
+#endif
+              )
 {
     assert (stk);
 
@@ -81,10 +120,13 @@ STL_StackDtor (Stack* stk, const char*  CALL_FILE,
 }
 
 ErrorType
-STL_StackPush (Stack* stk, DataType value,
-                           const char*  CALL_FILE,
-                           const size_t CALL_LINE,
-                           const char*  CALL_FUNC)
+STL_StackPush (Stack* stk,
+               DataType value
+
+#ifdef DEBUG
+               , STL_FREC_ARGS
+#endif
+              )
 {
     assert (stk);
 
@@ -99,17 +141,20 @@ STL_StackPush (Stack* stk, DataType value,
     stk->hashData  = 0;
 
     stk->hashStack = CountHash (stk, sizeof (Stack));
-    stk->hashData  = CountHash (stk->data, sizeof (DataType) * stk->capacity);
+    stk->hashData  = CountHash (stk->data, sizeof (DataType) * stk->capacity - 1);
 #endif
 
     return ReturnVerificator (stk);
 }
 
 ErrorType
-STL_StackPop (Stack* stk, DataType* value,
-                          const char*  CALL_FILE,
-                          const size_t CALL_LINE,
-                          const char*  CALL_FUNC)
+STL_StackPop (Stack* stk,
+              DataType* value
+
+#ifdef DEBUG
+              , STL_FREC_ARGS
+#endif
+              )
 {
     assert (stk);
 
@@ -232,3 +277,5 @@ StackReallocDown (Stack* stk)
 
     return stk->err;
 }
+
+#undef Verificator
