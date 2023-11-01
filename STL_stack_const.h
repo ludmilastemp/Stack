@@ -3,7 +3,12 @@
 
 #define TOSTR(x) #x
 
-/// режим debug
+//#define DEBUG
+//#define DEBUG_PRINT
+#define CANARY_PROTECTION
+#define HASH_PROTECTION
+
+/// режим print debug
 #ifdef DEBUG_PRINT
     const int DBG = 1;
 #else
@@ -15,7 +20,8 @@
 
 /// тип значений стека
 #ifndef STACK_T
-#define STACK_T int
+#define STACK_T char
+//#define STACK Stack_char
 #endif /* STACK_T */
 
 typedef STACK_T DataType;
@@ -55,7 +61,7 @@ const unsigned long long INCORRECT_SIZE = STACK_INCORRECT_SIZE;
 
 /// неккоректное значение элементов стека
 #ifndef STACK_INCORRECT_DATA
-#define STACK_INCORRECT_DATA 666
+#define STACK_INCORRECT_DATA '6'
 #endif /* STACK_INCORRECT_DATA */
 
 const DataType           INCORRECT_DATA = STACK_INCORRECT_DATA;

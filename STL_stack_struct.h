@@ -9,6 +9,7 @@
 
 #endif /* DBG_E */
 
+
 /// тип кода ошибки
 typedef int ErrorType;
 
@@ -19,7 +20,36 @@ typedef int ErrorType;
 
 /// структура стека
 //struct Stack##STACK_T <-define
-struct Stack
+//struct STACK
+//{
+//#ifdef CANARY_PROTECTION
+//    CanaryType leftCanary;
+//#endif
+//
+//#ifdef DEBUG
+//    size_t       CREATE_LINE;
+//    const char*  CREATE_FILE;
+//    const char*  CREATE_FUNC;
+//    const char*  CREATE_NAME;
+//#endif
+//
+//    DataType* data;
+//    size_t size;
+//    size_t capacity;
+//    ErrorType err;
+//
+//#ifdef HASH_PROTECTION
+//    long long hashStack;
+//    long long hashData;
+//#endif
+//
+//#ifdef CANARY_PROTECTION
+//    CanaryType rightCanary;
+//#endif
+//};
+
+/// структура стека int
+struct Stack_int
 {
 #ifdef CANARY_PROTECTION
     CanaryType leftCanary;
@@ -32,7 +62,36 @@ struct Stack
     const char*  CREATE_NAME;
 #endif
 
-    DataType* data;
+    int* data;
+    size_t size;
+    size_t capacity;
+    ErrorType err;
+
+#ifdef HASH_PROTECTION
+    long long hashStack;
+    long long hashData;
+#endif
+
+#ifdef CANARY_PROTECTION
+    CanaryType rightCanary;
+#endif
+};
+
+/// структура стека char
+struct Stack_char
+{
+#ifdef CANARY_PROTECTION
+    CanaryType leftCanary;
+#endif
+
+#ifdef DEBUG
+    size_t       CREATE_LINE;
+    const char*  CREATE_FILE;
+    const char*  CREATE_FUNC;
+    const char*  CREATE_NAME;
+#endif
+
+    char* data;
     size_t size;
     size_t capacity;
     ErrorType err;

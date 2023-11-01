@@ -84,10 +84,10 @@
 */
 #ifdef DEBUG
 #define StackPop(stk, value)                       \
-        STL_StackPop  ((stk), value, STL_MSENT_ARGS)
+        STL_StackPop ((stk), value, STL_MSENT_ARGS)
 #else
 #define StackPop(stk, value)                       \
-        STL_StackPop  ((stk), value)
+        STL_StackPop ((stk), value)
 #endif
 
 /**
@@ -113,7 +113,7 @@
 
 
 ErrorType
-STL_StackCtor (Stack* stk
+STL_StackCtor (STACK* stk
 
 #ifdef DEBUG
                , const char*  CREATE_NAME
@@ -122,7 +122,7 @@ STL_StackCtor (Stack* stk
                , size_t capacity = INITIAL_CAPACITY);
 
 ErrorType
-STL_StackDtor (Stack* stk
+STL_StackDtor (STACK* stk
 
 #ifdef DEBUG
                , STL_FREC_ARGS
@@ -130,14 +130,14 @@ STL_StackDtor (Stack* stk
                );
 
 ErrorType
-STL_StackPush (Stack* stk, DataType  value
+STL_StackPush (STACK* stk, DataType  value
 
 #ifdef DEBUG
                , STL_FREC_ARGS
 #endif
                );
 ErrorType
-STL_StackPop  (Stack* stk, DataType* value
+STL_StackPop  (STACK* stk, DataType* value
 
 #ifdef DEBUG
                , STL_FREC_ARGS

@@ -3,6 +3,9 @@
 
 #include "STL_stack_const.h"
 #include "STL_stack_struct.h"
+#ifdef HASH_PROTECTION
+#include "hash.h"
+#endif
 
 #ifdef DEBUG
 /// аргументы, принимаемые функциями
@@ -24,24 +27,13 @@
                       stk->CREATE_FUNC
 #endif /* DEBUG */
 
-#ifdef HASH_PROTECTION
-/**
-    \brief посчитать хеш
-    \param data указатель
-           size размер проверяемого отрезка памяти (в байтах)
-    \return хеш
-*/
-long long
-CountHash (void* data, long long size);
-#endif
-
 /**
     \brief проверка стека на корректность
     \param stk указатель на стек
     \return код ошибки
 */
 ErrorType
-STL_Verificator (Stack* stk);
+STL_Verificator (STACK* stk);
 
 /**
     \brief вывести стек
@@ -49,7 +41,7 @@ STL_Verificator (Stack* stk);
     \return void
 */
 void
-STL_StackDump (const Stack* stk
+STL_StackDump (const STACK* stk
 
 #ifdef DEBUG
                , STL_FREC_ARGS
@@ -62,7 +54,7 @@ STL_StackDump (const Stack* stk
     \return указатель на строку
 */
 char*
-StackPrintErr (const Stack* stk
+StackPrintErr (const STACK* stk
 
 #ifdef DEBUG
                , STL_FREC_ARGS

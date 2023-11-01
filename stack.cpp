@@ -1,8 +1,8 @@
 #include "STL_stack.h"
 
-static ErrorType StackRealloc     (Stack* stk);
-static ErrorType StackReallocUp   (Stack* stk);
-static ErrorType StackReallocDown (Stack* stk);
+static ErrorType StackRealloc     (STACK* stk);
+static ErrorType StackReallocUp   (STACK* stk);
+static ErrorType StackReallocDown (STACK* stk);
 
 /**
     \brief проверяет стек на корректность и выводит стек в случае ошибки
@@ -36,7 +36,7 @@ static ErrorType StackReallocDown (Stack* stk);
 #endif
 
 ErrorType
-STL_StackCtor (Stack* stk
+STL_StackCtor (STACK* stk
 
 #ifdef DEBUG
                , const char* CREATE_NAME
@@ -69,7 +69,7 @@ STL_StackCtor (Stack* stk
     stk->hashStack = 0;
     stk->hashData  = 0;
 
-    stk->hashStack = CountHash ((char*) stk, sizeof (Stack));
+    stk->hashStack = CountHash ((char*) stk, sizeof (STACK));
     stk->hashData  = CountHash ((char*) stk->data, sizeof (DataType) * stk->capacity);
 #endif
 
@@ -84,7 +84,7 @@ STL_StackCtor (Stack* stk
 }
 
 ErrorType
-STL_StackDtor (Stack* stk
+STL_StackDtor (STACK* stk
 
 #ifdef DEBUG
               , STL_FREC_ARGS
@@ -120,7 +120,7 @@ STL_StackDtor (Stack* stk
 }
 
 ErrorType
-STL_StackPush (Stack* stk,
+STL_StackPush (STACK* stk,
                DataType value
 
 #ifdef DEBUG
@@ -140,7 +140,7 @@ STL_StackPush (Stack* stk,
     stk->hashStack = 0;
     stk->hashData  = 0;
 
-    stk->hashStack = CountHash (stk, sizeof (Stack));
+    stk->hashStack = CountHash (stk, sizeof (STACK));
     stk->hashData  = CountHash (stk->data, sizeof (DataType) * stk->capacity - 1);
 #endif
 
@@ -148,7 +148,7 @@ STL_StackPush (Stack* stk,
 }
 
 ErrorType
-STL_StackPop (Stack* stk,
+STL_StackPop (STACK* stk,
               DataType* value
 
 #ifdef DEBUG
@@ -168,14 +168,14 @@ STL_StackPop (Stack* stk,
 
     if (StackReallocDown (stk)) return ReturnVerificator (stk);
 
-    *value = stk->data[(stk->size)--];
+    *value = stk->data[--(stk->size)];
     stk->data[stk->size] = INCORRECT_DATA;
 
 #ifdef HASH_PROTECTION
     stk->hashStack = 0;
     stk->hashData  = 0;
 
-    stk->hashStack = CountHash (stk, sizeof (Stack));
+    stk->hashStack = CountHash (stk, sizeof (STACK));
     stk->hashData  = CountHash (stk->data, sizeof (DataType) * stk->capacity);
 #endif
 
@@ -183,7 +183,7 @@ STL_StackPop (Stack* stk,
 }
 
 ErrorType
-StackRealloc (Stack* stk)
+StackRealloc (STACK* stk)
 {
     assert (stk);
 
@@ -222,7 +222,7 @@ StackRealloc (Stack* stk)
     stk->hashStack = 0;
     stk->hashData  = 0;
 
-    stk->hashStack = CountHash ((char*) stk, sizeof (Stack));
+    stk->hashStack = CountHash ((char*) stk, sizeof (STACK));
     stk->hashData  = CountHash ((char*) stk->data, sizeof (DataType) * stk->capacity);
 #endif
 
@@ -230,7 +230,7 @@ StackRealloc (Stack* stk)
 }
 
 ErrorType
-StackReallocUp (Stack* stk)
+StackReallocUp (STACK* stk)
 {
     assert (stk);
 
@@ -254,7 +254,7 @@ StackReallocUp (Stack* stk)
 }
 
 ErrorType
-StackReallocDown (Stack* stk)
+StackReallocDown (STACK* stk)
 {
     assert (stk);
 

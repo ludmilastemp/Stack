@@ -11,28 +11,8 @@ static char errStr[500] = "Error from ";
 
 static void STL_Print (const char* const fmt, ...);
 
-#ifdef HASH_PROTECTION
-long long
-CountHash (void* data, long long size)
-{
-    long long hash = 0;
-
-    $ printf ("I CountHash: *data = [%p], size = %d\n", data, size);
-
-    for (size_t i = 0; i < size; ++i)
-    {
-        hash += ((char*)data)[i];
-        $ printf ("%-2d %-4d %-4d  ", i, ((char*)data)[i], hash);
-    }
-
-    $ printf ("hash = %ld\n", hash);
-
-    return hash;
-}
-#endif
-
 ErrorType
-STL_Verificator (Stack* stk)
+STL_Verificator (STACK* stk)
 {
     assert (stk);
 
@@ -66,7 +46,7 @@ STL_Verificator (Stack* stk)
     stk->hashData  = 0;
     stk->err = 0;
 
-    stk->hashStack = CountHash (stk, sizeof (Stack));
+    stk->hashStack = CountHash (stk, sizeof (STACK));
     stk->hashData  = CountHash (stk->data, sizeof (DataType) * stk->capacity);
 
     if (stk->hashStack != hashStackRef)       err |= ERR_HASH_STACK;
@@ -82,7 +62,7 @@ STL_Verificator (Stack* stk)
 }
 
 void
-STL_StackDump (const Stack* stk
+STL_StackDump (const STACK* stk
 
 #ifdef DEBUG
                , STL_FREC_ARGS
@@ -148,7 +128,7 @@ STL_StackDump (const Stack* stk
 }
 
 char*
-StackPrintErr (const Stack* stk
+StackPrintErr (const STACK* stk
 
 #ifdef DEBUG
                , STL_FREC_ARGS
@@ -164,6 +144,37 @@ StackPrintErr (const Stack* stk
 #endif
             );
 
+#define StackPrintErrCheck(x)                \
+    if (stk->err % (2 * x) >= x)             \
+    {                                        \
+        sprintf (str, "ERROR! " #x "\n");     \
+        strcat (errStr, str);                \
+    }
+
+    StackPrintErrCheck (ERR_NOT_DATA_POINTER);
+    StackPrintErrCheck (ERR_NOT_MEMORY);
+    StackPrintErrCheck (ERR_ANTIOVERFLOW);
+    StackPrintErrCheck (ERR_INCORRECT_SIZE);
+    StackPrintErrCheck (ERR_INCORRECT_CAPACITY);
+
+#ifdef CANARY_PROTECTION
+    StackPrintErrCheck (ERR_LEFT_CANARY);
+    StackPrintErrCheck (ERR_RIGHT_CANARY);
+#endif
+
+#ifdef CANARY_PROTECTION
+    StackPrintErrCheck (ERR_LEFT_CANARY_DATA);
+    StackPrintErrCheck (ERR_RIGHT_CANARY_DATA);
+#endif
+
+#ifdef HASH_PROTECTION
+    StackPrintErrCheck (ERR_HASH_STACK);
+    StackPrintErrCheck (ERR_HASH_DATA);
+#endif
+
+#undef StackPrintErrCheck
+
+    /*
     if (stk->err % (2 * ERR_NOT_DATA_POINTER)   >= ERR_NOT_DATA_POINTER)
     {
         sprintf (str, "ERROR! incorrect *data = %p\n", stk->data);
@@ -227,7 +238,7 @@ StackPrintErr (const Stack* stk
         sprintf (str, "ERROR! incorrect hashData  = [0x%p]\n", stk->hashData);
         strcat (errStr, str);
     }
-#endif
+#endif  */
 
     STL_Print ("%s", errStr);
 
