@@ -1,38 +1,47 @@
-#ifndef STL_stack_
-#define STL_stack_
+//#ifndef STL_stack_
+//#define STL_stack_
 
-#include "STL_stack_const.h"
-#include "STL_stack_struct.h"
-#include "error.h"
+//#include "STL_stack_const.h"
+//#include "STL_stack_struct.h"
+#include "STL_stack_error.h"
 
-#ifdef DEBUG
-/// аргументы, при вызове функций из main
-#define STL_MSENT_ARGS __FILE__, \
-                       __LINE__, \
-                       __func__
+typedef STACK_T StackDataType;
 
-/// аргументы, при вызове функций из функции библиотеки
-#define STL_FSENT_ARGS CALL_FILE, \
-                       CALL_LINE, \
-                       CALL_FUNC
 
-/// аргументы, принимаемые функциями
-#define STL_FREC_ARGS  const char*  CALL_FILE, \
-                       const size_t CALL_LINE, \
-                       const char*  CALL_FUNC
-#endif /* DEBUG */
+#ifdef STACK_DEBUG
+    /// аргументы, при вызове функций из main
+    #define STL_MSENT_ARGS __FILE__,                \
+                           __LINE__,                \
+                           __func__
+
+    /// аргументы, при вызове функций из функции библиотеки
+    #define STL_FSENT_ARGS CALL_FILE,               \
+                           CALL_LINE,               \
+                           CALL_FUNC
+
+    /// аргументы, принимаемые функциями
+    #define STL_FREC_ARGS  const char*  CALL_FILE,  \
+                           const size_t CALL_LINE,  \
+                           const char*  CALL_FUNC
+
+    /// аргументы, при работе с DUMP
+    #define STL_DUMP_ARGS stk->CREATE_NAME,         \
+                          stk->CREATE_FILE,         \
+                          stk->CREATE_LINE,         \
+                          stk->CREATE_FUNC
+#endif /* STACK_DEBUG */
 
 /**
     \brief создать стек
     \param stk указатель на стек
     \return код ошибки
 */
-#ifdef DEBUG
-#define StackCtor(stk)                             \
-        STL_StackCtor ((stk), #stk, STL_MSENT_ARGS)
+#ifdef STACK_DEBUG
+    #define StackCtor(stk)                                          \
+            STL_StackCtor ((stk), #stk, STL_MSENT_ARGS)
 #else
-#define StackCtor(stk)                             \
-        STL_StackCtor ((stk))
+    #define StackCtor(stk)                                          \
+            STL_StackCtor ((stk))
 #endif
 
 /**
@@ -41,12 +50,12 @@
            capacity изначальный размер стека
     \return код ошибки
 */
-#ifdef DEBUG
-#define StackCtorCap(stk, capacity)                \
-        STL_StackCtor ((stk), #stk, STL_MSENT_ARGS, capacity)
+#ifdef STACK_DEBUG
+    #define StackCtorCap(stk, capacity)                             \
+            STL_StackCtor ((stk), #stk, STL_MSENT_ARGS, capacity)
 #else
-#define StackCtorCap(stk, capacity)                \
-        STL_StackCtor ((stk), capacity)
+    #define StackCtorCap(stk, capacity)                             \
+            STL_StackCtor ((stk), capacity)
 #endif
 
 /**
@@ -54,12 +63,12 @@
     \param stk указатель на стек
     \return 0
 */
-#ifdef DEBUG
-#define StackDtor(stk)                             \
-        STL_StackDtor ((stk), STL_MSENT_ARGS)
+#ifdef STACK_DEBUG
+    #define StackDtor(stk)                                          \
+            STL_StackDtor ((stk), STL_MSENT_ARGS)
 #else
-#define StackDtor(stk)                             \
-        STL_StackDtor ((stk))
+    #define StackDtor(stk)                                          \
+            STL_StackDtor ((stk))
 #endif
 
 /**
@@ -68,12 +77,24 @@
            value значение элемента
     \return код ошибки
 */
-#ifdef DEBUG
-#define StackPush(stk, value)                      \
-        STL_StackPush ((stk), value, STL_MSENT_ARGS)
+#ifdef STACK_DEBUG
+    #define StackPush(stk, value)                                   \
+            do {                                                    \
+                if (STL_StackPush ((stk), value, STL_MSENT_ARGS))   \
+                {                                                   \
+                    StackPrintErr (stk, STL_MSENT_ARGS);            \
+                    StackDump (stk);                                \
+                }                                                   \
+            } while (false)
 #else
-#define StackPush(stk, value)                      \
-        STL_StackPush ((stk), value)
+    #define StackPush(stk, value)                                   \
+            do {                                                    \
+                if (STL_StackPush ((stk), value))                   \
+                {                                                   \
+                    StackPrintErr (stk);                            \
+                    StackDump (stk);                                \
+                }                                                   \
+            } while (false)
 #endif
 
 /**
@@ -82,12 +103,51 @@
            value указатель на элемент
     \return код ошибки
 */
-#ifdef DEBUG
-#define StackPop(stk, value)                       \
-        STL_StackPop ((stk), value, STL_MSENT_ARGS)
+#ifdef STACK_DEBUG
+    #define StackPop(stk, value)                                    \
+            do {                                                    \
+                if (STL_StackPop ((stk), value, STL_MSENT_ARGS))    \
+                {                                                   \
+                    StackPrintErr (stk, STL_MSENT_ARGS);            \
+                    StackDump (stk);                                \
+                }                                                   \
+            } while (false)
 #else
-#define StackPop(stk, value)                       \
-        STL_StackPop ((stk), value)
+    #define StackPop(stk, value)                                    \
+            do {                                                    \
+                if (STL_StackPop ((stk), value))                    \
+                {                                                   \
+                    StackPrintErr (stk);                            \
+                    StackDump (stk);                                \
+                }                                                   \
+            } while (false)
+#endif
+
+/**
+    \brief проверить стек на корректность и вывести стек в случае ошибки
+    \param stk указатель на стек
+    \return код ошибки
+*/
+#ifdef STACK_DEBUG
+    #define StackVerificator(stk)                                   \
+    do {                                                            \
+                                                                    \
+        if (STL_StackVerificator ((stk)))                           \
+        {                                                           \
+            StackPrintErr (stk, STL_MSENT_ARGS);                    \
+            StackDump (stk);                                        \
+        }                                                           \
+    } while (false)
+#else
+    #define StackVerificator(stk)                                   \
+    do {                                                            \
+                                                                    \
+        if (STL_StackVerificator ((stk)))                           \
+        {                                                           \
+            StackPrintErr (stk);                                    \
+            StackDump (stk);                                        \
+        }                                                           \
+    } while (false)
 #endif
 
 /**
@@ -95,52 +155,59 @@
     \param stk указатель на стек
     \return void
 */
-#ifdef DEBUG
-#define STACK_DUMP(stk)                            \
-        STL_StackDump ((stk), STL_MSENT_ARGS)
+#ifdef STACK_DEBUG
+    #define StackDump(stk)                                          \
+        STL_StackDump ((stk), STL_MSENT_ARGS);
 #else
-#define STACK_DUMP(stk)                            \
-        STL_StackDump ((stk))
+    #define StackDump(stk)                                          \
+        STL_StackDump ((stk));
 #endif
 
-/**
-    \brief проверяет стек на корректность
-    \param stk указатель на стек
-    \return код ошибки
-*/
-#define ReturnVerificator(stk)                     \
-        STL_Verificator ((stk))
-
-
-ErrorType
+StackErrorType
 STL_StackCtor (STACK* stk
 
-#ifdef DEBUG
+#ifdef STACK_DEBUG
                , const char*  CREATE_NAME
                , STL_FREC_ARGS
 #endif
                , size_t capacity = INITIAL_CAPACITY);
 
-ErrorType
+StackErrorType
 STL_StackDtor (STACK* stk
 
-#ifdef DEBUG
+#ifdef STACK_DEBUG
                , STL_FREC_ARGS
 #endif
                );
 
-ErrorType
-STL_StackPush (STACK* stk, DataType  value
+StackErrorType
+STL_StackPush (STACK* stk, StackDataType  value
 
-#ifdef DEBUG
+#ifdef STACK_DEBUG
                , STL_FREC_ARGS
 #endif
                );
-ErrorType
-STL_StackPop  (STACK* stk, DataType* value
+StackErrorType
+STL_StackPop  (STACK* stk, StackDataType* value
 
-#ifdef DEBUG
+#ifdef STACK_DEBUG
                , STL_FREC_ARGS
 #endif
                );
-#endif /* STL_stack_ */
+
+/**
+    \brief проверка стека на корректность
+    \param stk указатель на стек
+    \return код ошибки
+*/
+StackErrorType
+STL_StackVerificator (STACK* stk);
+
+void
+STL_StackDump (const STACK* stk
+
+#ifdef STACK_DEBUG
+               , STL_FREC_ARGS
+#endif
+               );
+//#endif /* STL_stack_ */

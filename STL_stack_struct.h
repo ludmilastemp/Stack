@@ -1,5 +1,5 @@
-#ifndef STL_stack_struct_
-#define STL_stack_struct_
+//#ifndef STL_stack_struct_
+//#define STL_stack_struct_
 
 #ifndef DBG_E
 
@@ -9,99 +9,39 @@
 
 #endif /* DBG_E */
 
-
 /// тип кода ошибки
-typedef int ErrorType;
+typedef int StackErrorType;
 
-#ifdef CANARY_PROTECTION
+#ifdef STACK_CANARY_PROTECTION
     typedef long long CanaryType;
     #define CANARY_PRINT_SPECIFIER "%d"
 #endif
 
 /// структура стека
-//struct Stack##STACK_T <-define
-//struct STACK
-//{
-//#ifdef CANARY_PROTECTION
-//    CanaryType leftCanary;
-//#endif
-//
-//#ifdef DEBUG
-//    size_t       CREATE_LINE;
-//    const char*  CREATE_FILE;
-//    const char*  CREATE_FUNC;
-//    const char*  CREATE_NAME;
-//#endif
-//
-//    DataType* data;
-//    size_t size;
-//    size_t capacity;
-//    ErrorType err;
-//
-//#ifdef HASH_PROTECTION
-//    long long hashStack;
-//    long long hashData;
-//#endif
-//
-//#ifdef CANARY_PROTECTION
-//    CanaryType rightCanary;
-//#endif
-//};
-
-/// структура стека int
-struct Stack_int
+struct STACK
 {
-#ifdef CANARY_PROTECTION
+#ifdef STACK_CANARY_PROTECTION
     CanaryType leftCanary;
 #endif
 
-#ifdef DEBUG
+#ifdef STACK_DEBUG
     size_t       CREATE_LINE;
     const char*  CREATE_FILE;
     const char*  CREATE_FUNC;
     const char*  CREATE_NAME;
 #endif
 
-    int* data;
+    StackDataType* data;
     size_t size;
     size_t capacity;
-    ErrorType err;
+    StackErrorType err;
 
-#ifdef HASH_PROTECTION
+#ifdef STACK_HASH_PROTECTION
     long long hashStack;
     long long hashData;
 #endif
 
-#ifdef CANARY_PROTECTION
-    CanaryType rightCanary;
-#endif
-};
-
-/// структура стека char
-struct Stack_char
-{
-#ifdef CANARY_PROTECTION
-    CanaryType leftCanary;
-#endif
-
-#ifdef DEBUG
-    size_t       CREATE_LINE;
-    const char*  CREATE_FILE;
-    const char*  CREATE_FUNC;
-    const char*  CREATE_NAME;
-#endif
-
-    char* data;
-    size_t size;
-    size_t capacity;
-    ErrorType err;
-
-#ifdef HASH_PROTECTION
-    long long hashStack;
-    long long hashData;
-#endif
-
-#ifdef CANARY_PROTECTION
+#ifdef STACK_CANARY_PROTECTION
     CanaryType rightCanary;
 #endif
 };
@@ -114,22 +54,22 @@ enum StackErr
     ERR_INCORRECT_SIZE     = 1 << 1,
     ERR_INCORRECT_CAPACITY = 1 << 2,
     ERR_NOT_MEMORY         = 1 << 3,
-    ERR_ANTIOVERFLOW       = 1 << 4,
+    ERR_UNDERFLOW          = 1 << 4,
 
-#ifdef CANARY_PROTECTION
+#ifdef STACK_CANARY_PROTECTION
     ERR_LEFT_CANARY        = 1 << 5,
     ERR_RIGHT_CANARY       = 1 << 6,
 #endif
 
-#ifdef CANARY_PROTECTION
+#ifdef STACK_CANARY_PROTECTION
     ERR_LEFT_CANARY_DATA   = 1 << 7,
     ERR_RIGHT_CANARY_DATA  = 1 << 8,
 #endif
 
-#ifdef HASH_PROTECTION
+#ifdef STACK_HASH_PROTECTION
     ERR_HASH_STACK         = 1 << 9,
     ERR_HASH_DATA          = 1 << 10,
 #endif
 };
 
-#endif
+//#endif /* STL_stack_struct_ */

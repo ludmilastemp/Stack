@@ -1,30 +1,24 @@
 #ifndef STL_stack_const_
 #define STL_stack_const_
 
+#include "STL_stack_const_int.h"
+
 #define TOSTR(x) #x
 
-//#define DEBUG
-//#define DEBUG_PRINT
-#define CANARY_PROTECTION
-#define HASH_PROTECTION
+//#define STACK_DEBUG
+//#define STACK_DEBUG_PRINT
+//#define STACK_CANARY_PROTECTION
+//#define STACK_HASH_PROTECTION
 
 /// режим print debug
-#ifdef DEBUG_PRINT
-    const int DBG = 1;
+#ifdef STACK_DEBUG_PRINT
+    const int STACK_DEBUG_PRINT_V = 1;
 #else
-    const int DEBUG_PRINT = 0;
-#endif /* DEBUG_PRINT */
+    const int STACK_DEBUG_PRINT_V = 0;
+#endif /* STACK_DEBUG_PRINT */
 
 /// debug выводы
-#define $ if (DEBUG_PRINT)
-
-/// тип значений стека
-#ifndef STACK_T
-#define STACK_T char
-//#define STACK Stack_char
-#endif /* STACK_T */
-
-typedef STACK_T DataType;
+#define $ if (STACK_DEBUG_PRINT_V)
 
 /// спецификатор формата типа стека
 #ifndef STACK_DATA_PRINT_SPECIFIER
@@ -61,10 +55,10 @@ const unsigned long long INCORRECT_SIZE = STACK_INCORRECT_SIZE;
 
 /// неккоректное значение элементов стека
 #ifndef STACK_INCORRECT_DATA
-#define STACK_INCORRECT_DATA '6'
+#define STACK_INCORRECT_DATA 666
 #endif /* STACK_INCORRECT_DATA */
 
-const DataType           INCORRECT_DATA = STACK_INCORRECT_DATA;
+const StackDataType      INCORRECT_DATA = STACK_INCORRECT_DATA;
 
 /// файл вывода ошибок
 #ifndef LOGFILE
