@@ -1,4 +1,4 @@
-#include "STL_hash.h"
+#include "STL_stack_hash.h"
 
 long long
 CountHash (void* data, long long size)

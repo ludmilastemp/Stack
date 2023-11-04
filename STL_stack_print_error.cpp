@@ -1,4 +1,4 @@
-#include "STL_stack_error.h"
+#include "STL_stack_print_error.h"
 
 static char errStr[500] = "Error from ";
 
@@ -56,8 +56,7 @@ StackPrintErr (const STACK* stk
     return errStr;
 }
 
-static void
-STL_Print (const char* const fmt, ...)
+static void STL_Print (const char* const fmt, ...)
 {
     assert   (fmt);
     FILE* fp = fopen (logFile, "a");

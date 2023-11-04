@@ -1,5 +1,5 @@
-#ifndef STL_hash_
-#define STL_hash_
+#ifndef STL_stack_hash_
+#define STL_stack_hash_
 
 /**
     \brief посчитать хеш
@@ -10,4 +10,4 @@
 long long
 CountHash (void* data, long long size);
 
-#endif /* STL_hash_ */
+#endif /* STL_stack_hash_ */

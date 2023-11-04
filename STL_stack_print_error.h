@@ -1,5 +1,13 @@
-//#ifndef STL_stack_error_
-//#define STL_stack_error_
+#ifndef STL_stack_print_error_
+
+#ifdef STACK_FILE_TYPE
+    #include STACK_FILE_TYPE
+    #define STL_stack_print_error_
+
+    #include "STL_stack_initial_parameters.h"
+    #include "STL_stack_list_of_errors.h"
+    #include "STL_stack_struct.h"
+#endif
 
 #ifndef DBG_E
 
@@ -8,11 +16,8 @@
 
 #endif /* DBG_E */
 
-#include "STL_stack_const.h"
-#include "STL_stack_struct.h"
-
 #ifdef STACK_HASH_PROTECTION
-#include "STL_hash.h"
+#include "STL_stack_hash.h"
 #endif
 
 #ifdef STACK_DEBUG
@@ -41,4 +46,4 @@ StackPrintErr (const STACK* stk
 #endif
                );
 
-//#endif /* STL_error_ */
+#endif /* STL_stack_print_error_ */

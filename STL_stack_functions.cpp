@@ -1,14 +1,11 @@
-#ifndef DBG_E
+#include "STL_stack_functions.h"
 
-#include <stdarg.h>
-
-#endif /* DBG_E */
-
-#include "STL_stack.h"
+typedef STACK_T StackDataType;
 
 static StackErrorType StackRealloc     (STACK* stk);
 static StackErrorType StackReallocUp   (STACK* stk);
 static StackErrorType StackReallocDown (STACK* stk);
+static int Compare (const STACK_T* var1, const STACK_T* var2);
 static void STL_Print (const char* const fmt, ...);
 
 /**
@@ -68,7 +65,7 @@ STL_StackCtor (STACK* stk
                , const char* CREATE_NAME
                , STL_FREC_ARGS
 #endif
-               , size_t capacity)
+               )
 {
     assert (stk);
 
@@ -80,7 +77,7 @@ STL_StackCtor (STACK* stk
 #endif
 
     stk->size     = 0;
-    stk->capacity = capacity;
+    stk->capacity = INITIAL_CAPACITY;
 
     stk->err      = 0;
 
@@ -189,6 +186,7 @@ STL_StackPop (STACK* stk,
     if (stk->size == 0)
     {
         stk->err = ERR_UNDERFLOW;
+
         return ReturnStackVerificator (stk);
     }
 
@@ -287,14 +285,14 @@ STL_StackDump (const STACK* stk
         size_t i = 0;
         for (; i < stk->size; ++i)
         {
-            if (stk->data[i] == INCORRECT_DATA)
+            if (Compare (&stk->data[i], &INCORRECT_DATA))
                 STL_Print ("\t\t *[%zd] = POISON\n", i);
             else
                 STL_Print ("\t\t *[%zd] = " STACK_DATA_PRINT_SPECIFIER "\n", i, stk->data[i]);
         }
         for (; i < stk->capacity; ++i)
         {
-            if (stk->data[i] == INCORRECT_DATA)
+            if (Compare (&stk->data[i], &INCORRECT_DATA))
                 STL_Print ("\t\t  [%zd] = POISON\n", i);
             else
                 STL_Print ("\t\t  [%zd] = " STACK_DATA_PRINT_SPECIFIER "\n", i, stk->data[i]);
@@ -378,7 +376,7 @@ StackReallocUp (STACK* stk)
 
     if (stk->size < stk->capacity) return 0;
 
-    $ printf ("I ReallocUp   size = %d  capacity = %d\n",
+    if (STACK_DEBUG_PRINT_V) printf ("I ReallocUp   size = %d  capacity = %d\n",
                         stk->size, stk->capacity);
 
     stk->capacity *= (size_t)EXPAND_MULTIPLIER;
@@ -389,7 +387,7 @@ StackReallocUp (STACK* stk)
 
     if (StackRealloc (stk)) return stk->err;
 
-    $ printf ("New --------- size = %d  capacity = %d\n",
+    if (STACK_DEBUG_PRINT_V) printf ("New --------- size = %d  capacity = %d\n",
                         stk->size, stk->capacity);
 
     return stk->err;
@@ -403,7 +401,7 @@ StackReallocDown (STACK* stk)
     if ((stk->size - 1) * EXPAND_MULTIPLIER * EXPAND_MULTIPLIER > stk->capacity ||
         stk->size == 1) return 0;
 
-    $ printf ("I ReallocDown size = %d  capacity = %d\n",
+    if (STACK_DEBUG_PRINT_V) printf ("I ReallocDown size = %d  capacity = %d\n",
                         stk->size, stk->capacity);
 
     stk->capacity /= EXPAND_MULTIPLIER;
@@ -414,10 +412,21 @@ StackReallocDown (STACK* stk)
 
     if (StackRealloc (stk)) return stk->err;
 
-    $ printf ("New---------- size = %d  capacity = %d\n",
+    if (STACK_DEBUG_PRINT_V) printf ("New---------- size = %d  capacity = %d\n",
                         stk->size, stk->capacity);
 
     return stk->err;
+}
+
+static int Compare (const STACK_T* var1, const STACK_T* var2)
+{
+    for (int i = 0; i < sizeof (STACK_T); i++)
+    {
+        if (*(char*)var1 + i == *(char*)var2 + i) ;
+        else return 0;
+    }
+
+    return 1;
 }
 
 static void STL_Print (const char* const fmt, ...)
@@ -437,6 +446,3 @@ static void STL_Print (const char* const fmt, ...)
     fclose   (fp);
     fp = nullptr;
 }
-
-
-#undef Verificator

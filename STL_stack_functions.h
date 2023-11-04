@@ -1,12 +1,20 @@
-//#ifndef STL_stack_
-//#define STL_stack_
+#ifndef STL_stack_function_
 
-//#include "STL_stack_const.h"
-//#include "STL_stack_struct.h"
-#include "STL_stack_error.h"
+#ifdef STACK_FILE_TYPE
+    #include STACK_FILE_TYPE
+    #define STL_stack_function_
 
-typedef STACK_T StackDataType;
+    #include "STL_stack_initial_parameters.h"
+    #include "STL_stack_struct.h"
+    #include "STL_stack_print_error.h"
+    #include "STL_stack_list_of_errors.h"
+#endif
 
+#ifndef DBG_E
+
+#include <stdarg.h>
+
+#endif /* DBG_E */
 
 #ifdef STACK_DEBUG
     /// аргументы, при вызове функций из main
@@ -170,7 +178,7 @@ STL_StackCtor (STACK* stk
                , const char*  CREATE_NAME
                , STL_FREC_ARGS
 #endif
-               , size_t capacity = INITIAL_CAPACITY);
+               );
 
 StackErrorType
 STL_StackDtor (STACK* stk
@@ -181,14 +189,14 @@ STL_StackDtor (STACK* stk
                );
 
 StackErrorType
-STL_StackPush (STACK* stk, StackDataType  value
+STL_StackPush (STACK* stk, STACK_T value
 
 #ifdef STACK_DEBUG
                , STL_FREC_ARGS
 #endif
                );
 StackErrorType
-STL_StackPop  (STACK* stk, StackDataType* value
+STL_StackPop  (STACK* stk, STACK_T* value
 
 #ifdef STACK_DEBUG
                , STL_FREC_ARGS
@@ -210,4 +218,5 @@ STL_StackDump (const STACK* stk
                , STL_FREC_ARGS
 #endif
                );
-//#endif /* STL_stack_ */
+
+#endif /* STL_stack_function_ */
