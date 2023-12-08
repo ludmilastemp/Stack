@@ -1,7 +1,9 @@
 
+#ifndef STACK
 #define CONCAT(arg1, arg2) arg1##arg2
 #define STACK_TYPED_WITH(type) CONCAT (Stack_, type)
 #define STACK STACK_TYPED_WITH(STACK_T)
+#endif
 
 #include "STL_stack_list_of_errors.h"
 #include "STL_stack_struct.h"

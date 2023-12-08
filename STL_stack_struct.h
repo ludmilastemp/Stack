@@ -35,8 +35,8 @@ struct STACK
 #endif
 
     STACK_T* data;
-    size_t size;
-    size_t capacity;
+    long long size;
+    long long capacity;
     StackErrorType err;
 
 #ifdef STACK_HASH_PROTECTION

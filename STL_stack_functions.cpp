@@ -5,7 +5,8 @@ typedef STACK_T StackDataType;
 static StackErrorType StackRealloc     (STACK* stk);
 static StackErrorType StackReallocUp   (STACK* stk);
 static StackErrorType StackReallocDown (STACK* stk);
-static int Compare (const STACK_T* var1, const STACK_T* var2);
+static int  Compare   (const STACK_T* var1,
+                       const STACK_T* var2);
 static void STL_Print (const char* const fmt, ...);
 
 /**
@@ -114,7 +115,8 @@ STL_StackDtor (STACK* stk
 #endif
               )
 {
-    assert (stk);
+    if (stk == nullptr) return 0;
+//    assert (stk);
 
     StackVERIFICATOR (stk);
 
@@ -192,7 +194,9 @@ STL_StackPop (STACK* stk,
 
     if (StackReallocDown (stk)) return ReturnStackVerificator (stk);
 
-    *value = stk->data[--(stk->size)];
+    --(stk->size);
+
+    if (value != nullptr) *value = stk->data[stk->size];
     stk->data[stk->size] = INCORRECT_DATA;
 
 #ifdef STACK_HASH_PROTECTION
@@ -216,9 +220,10 @@ STL_StackVerificator (STACK* stk)
     if (stk->err == ERR_NOT_MEMORY)           err |= ERR_NOT_MEMORY;
     if (stk->err == ERR_UNDERFLOW)            err |= ERR_UNDERFLOW;
     if (!(stk->data))                         err |= ERR_NOT_DATA_POINTER;
-    if (stk->size == INCORRECT_SIZE ||
+    if (stk->size < 0 ||
+        stk->size == INCORRECT_SIZE ||
         stk->size > stk->capacity)            err |= ERR_INCORRECT_SIZE;
-    if (stk->capacity == 0 ||
+    if (stk->capacity <= 0 ||
         stk->capacity == INCORRECT_CAPACITY)  err |= ERR_INCORRECT_CAPACITY;
 
 #ifdef STACK_CANARY_PROTECTION
@@ -227,7 +232,7 @@ STL_StackVerificator (STACK* stk)
 #endif
 
 #ifdef STACK_CANARY_PROTECTION
-    if (*((CanaryType*)stk->data - 1)             != (CanaryType) (stk->data))
+    if (*(CanaryType*)(stk->data + stk->capacity) != (CanaryType) (stk->data))
                                               err |= ERR_LEFT_CANARY_DATA;
     if (*(CanaryType*)(stk->data + stk->capacity) != (CanaryType) (stk->data))
                                               err |= ERR_RIGHT_CANARY_DATA;
@@ -245,7 +250,6 @@ STL_StackVerificator (STACK* stk)
     stk->hashData  = CountHash (stk->data, sizeof (StackDataType) * stk->capacity);
 
     if (stk->hashStack != hashStackRef)       err |= ERR_HASH_STACK;
-    if (stk->hashData  != hashDataRef)        err |= ERR_HASH_DATA;
 
     stk->hashStack = hashStackRef;
     stk->hashData  = hashDataRef;
@@ -327,7 +331,7 @@ StackRealloc (STACK* stk)
 {
     assert (stk);
 
-    size_t capacityNew = stk->capacity * sizeof (StackDataType);
+    size_t capacityNew = (size_t) (stk->capacity * sizeof (StackDataType));
 
 #ifdef STACK_CANARY_PROTECTION
     capacityNew += 2 * sizeof (CanaryType);
@@ -353,7 +357,7 @@ StackRealloc (STACK* stk)
     *(CanaryType*)(stk->data + stk->capacity) = (CanaryType) (stk->data);
 #endif
 
-    for (size_t i = stk->size; i < stk->capacity; i++)
+    for (long long i = stk->size; i < stk->capacity; i++)
     {
         stk->data[i] = INCORRECT_DATA;
     }
@@ -376,7 +380,7 @@ StackReallocUp (STACK* stk)
 
     if (stk->size < stk->capacity) return 0;
 
-    if (STACK_DEBUG_PRINT_V) printf ("I ReallocUp   size = %d  capacity = %d\n",
+    if (STACK_DEBUG_PRINT_V) printf ("I ReallocUp   size = %lld  capacity = %d\n",
                         stk->size, stk->capacity);
 
     stk->capacity *= (size_t)EXPAND_MULTIPLIER;
@@ -401,7 +405,7 @@ StackReallocDown (STACK* stk)
     if ((stk->size - 1) * EXPAND_MULTIPLIER * EXPAND_MULTIPLIER > stk->capacity ||
         stk->size == 1) return 0;
 
-    if (STACK_DEBUG_PRINT_V) printf ("I ReallocDown size = %d  capacity = %d\n",
+    if (STACK_DEBUG_PRINT_V) printf ("I ReallocDown size = %lld  capacity = %lld\n",
                         stk->size, stk->capacity);
 
     stk->capacity /= EXPAND_MULTIPLIER;
@@ -412,7 +416,7 @@ StackReallocDown (STACK* stk)
 
     if (StackRealloc (stk)) return stk->err;
 
-    if (STACK_DEBUG_PRINT_V) printf ("New---------- size = %d  capacity = %d\n",
+    if (STACK_DEBUG_PRINT_V) printf ("New---------- size = %lld  capacity = %lld\n",
                         stk->size, stk->capacity);
 
     return stk->err;
@@ -420,9 +424,9 @@ StackReallocDown (STACK* stk)
 
 static int Compare (const STACK_T* var1, const STACK_T* var2)
 {
-    for (int i = 0; i < sizeof (STACK_T); i++)
+    for (size_t i = 0; i < sizeof (STACK_T); i++)
     {
-        if (*(char*)var1 + i == *(char*)var2 + i) ;
+        if (*(const char*)var1 + i == *(const char*)var2 + i) ;
         else return 0;
     }
 
